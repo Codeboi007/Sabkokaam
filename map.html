@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KaamFinder - Connect with Local Jobs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #2e68b2;
+            color: white;
+            padding: 15px 0;
+            border-bottom: 5px solid #e67e22;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            margin-left: 20px;
+        }
+        
+        .logo span {
+            color: #e67e22;
+        }
+        
+        .search-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .search-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .suggestion-item {
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+        
+        .suggestion-item:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .filter-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 10px 15px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background: #e67e22;
+            color: white;
+        }
+        
+        .map-container {
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .job-listings {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .job-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .job-header {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .job-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .job-wage {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e67e22;
+        }
+        
+        .job-details {
+            padding: 15px;
+        }
+        
+        .job-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .job-icon {
+            margin-right: 10px;
+            color: #2e68b2;
+        }
+        
+        .job-actions {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.2s;
+        }
+        
+        .route-btn {
+            background: #2e68b2;
+            color: white;
+        }
+        
+        .route-btn:hover {
+            background: #1a4a8f;
+        }
+        
+        .contact-btn {
+            background: #e67e22;
+            color: white;
+        }
+        
+        .contact-btn:hover {
+            background: #d35400;
+        }
+        
+        .add-job-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #e67e22;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.2s;
+            z-index: 100;
+        }
+        
+        .add-job-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        @media (max-width: 768px) {
+            .search-container {
+                flex-direction: column;
+            }
+            
+            .map-container {
+                height: 350px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">Kaam<span>Finder</span></div>
+    </header>
+    
+    <div class="container">
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" id="location-input" class="search-input" placeholder="Search location...">
+                <div id="location-suggestions" class="search-suggestions"></div>
+            </div>
+            
+            <div class="filter-options">
+                <button class="filter-btn active" data-type="all">All Jobs</button>
+                <button class="filter-btn" data-type="construction">Construction</button>
+                <button class="filter-btn" data-type="cleaning">Cleaning</button>
+                <button class="filter-btn" data-type="household">Household</button>
+                <button class="filter-btn" data-type="delivery">Delivery</button>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <!-- Direct iframe implementation as requested -->
+            <iframe id="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111136.42559774431!2d74.4260381535804!3d15.866862647587144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf669f5095362f%3A0x7e34b31edcdefb5f!2sBelagavi%2C%20Karnataka!5e1!3m2!1sen!2sin!4v1740158680498!5m2!1sen!2sin" 
+                width="100%" height="100%" style="border:0;" 
+                allowfullscreen="" loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+        
+        <div class="job-listings" id="job-listings">
+            <!-- Job listings will be populated dynamically -->
+        </div>
+    </div>
+    
+    <div class="add-job-btn" id="add-job-btn">+</div>
+
+    <script>
+        // Sample job data
+        const jobsData = [
+            {
+                id: 1,
+                title: "Construction Helper",
+                type: "construction",
+                wage: "₹550/day",
+                employer: "Sharma Construction",
+                location: "Civil Lines, Belagavi",
+                contact: "9876543210",
+                time: "8 AM - 5 PM",
+                description: "Need 3 helpers for brick laying and cement work.",
+                coordinates: { lat: 15.8596, lng: 74.5066 }
+            },
+            {
+                id: 2,
+                title: "House Cleaning",
+                type: "cleaning",
+                wage: "₹400/day",
+                employer: "Gupta Residence",
+                location: "Tilakwadi, Belagavi",
+                contact: "8765432109",
+                time: "10 AM - 4 PM",
+                description: "Deep cleaning of 3BHK apartment, one-time job.",
+                coordinates: { lat: 15.8700, lng: 74.4800 }
+            },
+            {
+                id: 3,
+                title: "Garden Maintenance",
+                type: "household",
+                wage: "₹350/day",
+                employer: "Green Gardens Society",
+                location: "Angol, Belagavi",
+                contact: "7654321098",
+                time: "7 AM - 12 PM",
+                description: "Regular garden maintenance, pruning and planting.",
+                coordinates: { lat: 15.8500, lng: 74.4900 }
+            },
+            {
+                id: 4,
+                title: "Food Delivery Person",
+                type: "delivery",
+                wage: "₹80/delivery",
+                employer: "Local Eats Restaurant",
+                location: "Club Road, Belagavi",
+                contact: "6543210987",
+                time: "11 AM - 10 PM (Shifts)",
+                description: "Need delivery person with own bicycle or motorcycle.",
+                coordinates: { lat: 15.8650, lng: 74.5150 }
+            }
+        ];
+
+        // Simulated location suggestions
+        const popularPlaces = [
+            "Belagavi City Center",
+            "Tilakwadi, Belagavi",
+            "Angol, Belagavi",
+            "Belgaum Cantonment",
+            "Vadgaon, Belagavi",
+            "Shahpur, Belagavi",
+            "Hindalga, Karnataka",
+            "Kangrali, Karnataka"
+        ];
+
+        // Show route function - Redirects to Google Maps with directions
+        function showRoute(jobId) {
+            const job = jobsData.find(j => j.id === jobId);
+            if (!job) return;
+            
+            // Get current location or use a fallback
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const userLocation = `${position.coords.latitude},${position.coords.longitude}`;
+                        const destinationLocation = job.location.replaceAll(' ', '+');
+                        
+                        // Open Google Maps in a new tab with directions
+                        window.open(`https://www.google.com/maps/dir/${userLocation}/${destinationLocation},+Belagavi,+Karnataka,+India/`, '_blank');
+                    },
+                    () => {
+                        // Fallback if user denies location access
+                        const destinationLocation = job.location.replaceAll(' ', '+');
+                        window.open(`https://www.google.com/maps/dir//${destinationLocation},+Belagavi,+Karnataka,+India/`, '_blank');
+                    }
+                );
+            } else {
+                // Fallback for browsers that don't support geolocation
+                const destinationLocation = job.location.replaceAll(' ', '+');
+                window.open(`https://www.google.com/maps/dir//${destinationLocation},+Belagavi,+Karnataka,+India/`, '_blank');
+            }
+        }
+
+        // Filter jobs by type
+        function filterJobs(type) {
+            // Highlight active filter button
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`.filter-btn[data-type="${type}"]`).classList.add('active');
+            
+            // Filter job listings
+            renderJobListings(type);
+            
+            // Update map markers (we're using iframe so just update the visible job listings)
+        }
+
+        // Render job listings
+        function renderJobListings(filterType = 'all') {
+            const container = document.getElementById('job-listings');
+            container.innerHTML = '';
+            
+            const filteredJobs = filterType === 'all' 
+                ? jobsData 
+                : jobsData.filter(job => job.type === filterType);
+            
+            filteredJobs.forEach(job => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <div class="job-header">
+                        <div class="job-title">${job.title}</div>
+                        <div class="job-wage">${job.wage}</div>
+                    </div>
+                    <div class="job-details">
+                        <div class="job-info">
+                            <span class="job-icon">👤</span>
+                            <span>${job.employer}</span>
+                        </div>
+                        <div class="job-info">
+                            <span class="job-icon">📍</span>
+                            <span>${job.location}</span>
+                        </div>
+                        <div class="job-info">
+                            <span class="job-icon">🕒</span>
+                            <span>${job.time}</span>
+                        </div>
+                        <p>${job.description}</p>
+                    </div>
+                    <div class="job-actions">
+                        <button class="action-btn route-btn" onclick="showRoute(${job.id})">Show Route</button>
+                        <button class="action-btn contact-btn" onclick="contactEmployer('${job.contact}')">Contact</button>
+                    </div>
+                `;
+                container.appendChild(jobCard);
+            });
+        }
+
+        // Contact employer function
+        function contactEmployer(phone) {
+            window.location.href = `tel:${phone}`;
+        }
+
+        // Mock function for adding a new job
+        function showAddJobForm() {
+            alert("Add Job functionality would be implemented here.\n\nEmployers would be able to add new job listings with location, wage, and requirements.");
+        }
+
+        // Setup location search with suggestions
+        function setupLocationSuggestions() {
+            const input = document.getElementById('location-input');
+            const suggestionsContainer = document.getElementById('location-suggestions');
+            
+            input.addEventListener('input', function() {
+                const value = this.value.toLowerCase();
+                if (!value) {
+                    suggestionsContainer.style.display = 'none';
+                    return;
+                }
+                
+                // Filter suggestions based on input
+                const filtered = popularPlaces.filter(place => 
+                    place.toLowerCase().includes(value)
+                );
+                
+                if (filtered.length > 0) {
+                    suggestionsContainer.innerHTML = '';
+                    filtered.forEach(place => {
+                        const div = document.createElement('div');
+                        div.className = 'suggestion-item';
+                        div.textContent = place;
+                        div.addEventListener('click', () => {
+                            input.value = place;
+                            suggestionsContainer.style.display = 'none';
+                            
+                            // Update iframe to focus on this location
+                            const locationQuery = place.replaceAll(' ', '+');
+                            const mapIframe = document.getElementById('google-map');
+                            mapIframe.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111136.42559774431!2d74.4260381535804!3d15.866862647587144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf669f5095362f%3A0x7e34b31edcdefb5f!2s${locationQuery}!5e1!3m2!1sen!2sin!4v1740158680498!5m2!1sen!2sin`;
+                        });
+                        suggestionsContainer.appendChild(div);
+                    });
+                    suggestionsContainer.style.display = 'block';
+                } else {
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+            
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== input && !suggestionsContainer.contains(e.target)) {
+                    suggestionsContainer.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize everything when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Render initial job listings
+            renderJobListings();
+            
+            // Setup filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterJobs(btn.getAttribute('data-type'));
+                });
+            });
+            
+            // Setup add job button
+            document.getElementById('add-job-btn').addEventListener('click', showAddJobForm);
+            
+            // Setup location suggestions
+            setupLocationSuggestions();
+        });
+    </script>
+</body>
+</html>
