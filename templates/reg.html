@@ -79,22 +79,31 @@
 <body>
     <div class="container">
         <h2>Register</h2>
-        <form method="POST" action="{{ url_for('user_reg') }}">
+        <form method="POST" action="{{ url_for('user_reg') }}" enctype="multipart/form-data">
             <label for="name">Full Name</label>
             <input type="text" id="name" name="name" required>
+        
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
+        
             <label for="phone">Phone Number</label>
             <input type="text" id="phone" name="phone" required>
+        
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
+        
             <label for="role">Role</label>
             <select id="role" name="role" required>
                 <option value="worker">Worker</option>
                 <option value="employer">Employer</option>
             </select>
+        
             <label for="location">Location</label>
             <input type="text" id="location" name="location" required>
+        
+            <label for="profile_photo">Profile Photo</label>
+            <input type="file" id="profile_photo" name="profile_photo" accept="image/*">
+        
             <button type="submit">Register</button>
         </form>
         {% with messages = get_flashed_messages(with_categories=true) %}
