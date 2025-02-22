@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 600px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        h2 {
+            margin-top: 0;
+        }
+        p {
+            margin: 5px 0;
+        }
+        a {
+            display: inline-block;
+            margin-top: 10px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results for "{{ query }}"</h1>
+        <ul>
+            {% for job in jobs %}
+                <li>
+                    <h2>{{ job.title }}</h2>
+                    <p>Description: {{ job.description }}</p>
+                    <p>Location: {{ job.location }}</p>
+                    <p>Salary: ₹{{ job.salary }}</p>
+                    <a href="{{ url_for('job.apply_job', job_id=job.id) }}">Apply</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{{ url_for('user.dashboard') }}">Back to Dashboard</a>
+    </div>
+</body>
+</html>
