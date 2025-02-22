@@ -7,7 +7,6 @@
     <!-- Load face-api.js from a reliable CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
     <style>
-        /* Previous styles remain the same */
         body {
             font-family: Arial, sans-serif;
             max-width: 1200px;
@@ -108,7 +107,6 @@
     <div id="status"></div>
 
     <script>
-        // Wait for face-api.js to load
         document.addEventListener('DOMContentLoaded', () => {
             setTimeout(initializeApp, 100);
         });
@@ -151,7 +149,6 @@
             const retakeButton = document.getElementById('retake');
             const compareButton = document.getElementById('compare');
 
-            // Handle file upload
             fileInput.addEventListener('change', async (e) => {
                 const file = e.target.files[0];
                 if (file) {
@@ -160,8 +157,7 @@
                         uploadedImage.src = e.target.result;
                         uploadedImage.style.display = 'block';
                         updateStatus('Processing reference photo...', 'loading');
-                        
-                        // Wait for image to load
+                
                         await new Promise(resolve => uploadedImage.onload = resolve);
                         
                         try {
@@ -183,7 +179,7 @@
                 }
             });
 
-            // Start camera
+            
             startButton.addEventListener('click', async () => {
                 try {
                     const stream = await navigator.mediaDevices.getUserMedia({ 
@@ -204,7 +200,7 @@
                 }
             });
 
-            // Capture photo
+            
             captureButton.addEventListener('click', () => {
                 canvas.width = video.videoWidth;
                 canvas.height = video.videoHeight;
@@ -220,7 +216,7 @@
                 updateStatus('Photo captured! Click Compare to match faces.', 'success');
             });
 
-            // Retake photo
+            
             retakeButton.addEventListener('click', () => {
                 video.style.display = 'block';
                 capturedImage.style.display = 'none';
@@ -230,7 +226,7 @@
                 updateStatus('Ready to capture new photo', 'success');
             });
 
-            // Compare photos
+        
             compareButton.addEventListener('click', async () => {
                 if (!referenceDescriptor) {
                     updateStatus('Please upload and process a reference photo first!', 'error');
@@ -263,7 +259,7 @@
             });
         }
 
-        // Helper function to update status
+        
         function updateStatus(message, type) {
             const status = document.getElementById('status');
             status.textContent = message;
