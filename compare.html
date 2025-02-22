@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Face Matching App</title>
+    <!-- Load face-api.js from a reliable CDN -->
+    <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+    <style>
+        /* Previous styles remain the same */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .box {
+            width: 45%;
+            min-width: 300px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        #video, #uploadedImage, #capturedImage {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        #status {
+            margin: 20px;
+            padding: 10px;
+            border-radius: 4px;
+        }
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .loading {
+            background-color: #d9edf7;
+            color: #31708f;
+        }
+        #loadingMessage {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: #d9edf7;
+            color: #31708f;
+            padding: 10px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingMessage">Loading face recognition models...</div>
+    <h1>Face Matching App</h1>
+    
+    <div class="container">
+        <div class="box">
+            <h2>Upload Reference Photo</h2>
+            <input type="file" id="fileInput" accept="image/*">
+            <img id="uploadedImage" style="display: none;">
+        </div>
+        
+        <div class="box">
+            <h2>Camera</h2>
+            <video id="video" autoplay playsinline></video>
+            <canvas id="canvas" style="display: none;"></canvas>
+            <img id="capturedImage" style="display: none;">
+            <div>
+                <button id="startCamera">Start Camera</button>
+                <button id="capture" disabled>Capture Photo</button>
+                <button id="retake" style="display: none;">Retake</button>
+                <button id="compare" style="display: none;">Compare Photos</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="status"></div>
+
+    <script>
+        // Wait for face-api.js to load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(initializeApp, 100);
+        });
+
+        async function initializeApp() {
+            const loadingMessage = document.getElementById('loadingMessage');
+            loadingMessage.style.display = 'block';
+
+            try {
+                // Set the models path
+                const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/';
+                
+                // Load all models
+                await Promise.all([
+                    faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+                    faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+                ]);
+
+                loadingMessage.style.display = 'none';
+                updateStatus('Face recognition models loaded! Ready to use.', 'success');
+                initializeElements();
+            } catch (error) {
+                loadingMessage.style.display = 'none';
+                updateStatus('Error loading models: ' + error.message, 'error');
+                console.error('Error loading models:', error);
+            }
+        }
+
+        let referenceDescriptor = null;
+
+        function initializeElements() {
+            const video = document.getElementById('video');
+            const canvas = document.getElementById('canvas');
+            const capturedImage = document.getElementById('capturedImage');
+            const uploadedImage = document.getElementById('uploadedImage');
+            const fileInput = document.getElementById('fileInput');
+            const startButton = document.getElementById('startCamera');
+            const captureButton = document.getElementById('capture');
+            const retakeButton = document.getElementById('retake');
+            const compareButton = document.getElementById('compare');
+
+            // Handle file upload
+            fileInput.addEventListener('change', async (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = async (e) => {
+                        uploadedImage.src = e.target.result;
+                        uploadedImage.style.display = 'block';
+                        updateStatus('Processing reference photo...', 'loading');
+                        
+                        // Wait for image to load
+                        await new Promise(resolve => uploadedImage.onload = resolve);
+                        
+                        try {
+                            const detection = await faceapi.detectSingleFace(uploadedImage)
+                                .withFaceLandmarks()
+                                .withFaceDescriptor();
+                                
+                            if (detection) {
+                                referenceDescriptor = detection.descriptor;
+                                updateStatus('Reference photo processed successfully!', 'success');
+                            } else {
+                                updateStatus('No face detected in reference photo. Please try another photo.', 'error');
+                            }
+                        } catch (err) {
+                            updateStatus('Error processing reference photo: ' + err.message, 'error');
+                        }
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // Start camera
+            startButton.addEventListener('click', async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            facingMode: 'user'
+                        } 
+                    });
+                    video.srcObject = stream;
+                    video.style.display = 'block';
+                    captureButton.disabled = false;
+                    startButton.disabled = true;
+                    updateStatus('Camera started successfully!', 'success');
+                } catch (err) {
+                    updateStatus('Error accessing camera: ' + err.message, 'error');
+                    console.error('Error:', err);
+                }
+            });
+
+            // Capture photo
+            captureButton.addEventListener('click', () => {
+                canvas.width = video.videoWidth;
+                canvas.height = video.videoHeight;
+                canvas.getContext('2d').drawImage(video, 0, 0);
+                capturedImage.src = canvas.toDataURL('image/png');
+                
+                video.style.display = 'none';
+                capturedImage.style.display = 'block';
+                captureButton.style.display = 'none';
+                retakeButton.style.display = 'inline';
+                compareButton.style.display = 'inline';
+                
+                updateStatus('Photo captured! Click Compare to match faces.', 'success');
+            });
+
+            // Retake photo
+            retakeButton.addEventListener('click', () => {
+                video.style.display = 'block';
+                capturedImage.style.display = 'none';
+                captureButton.style.display = 'inline';
+                retakeButton.style.display = 'none';
+                compareButton.style.display = 'none';
+                updateStatus('Ready to capture new photo', 'success');
+            });
+
+            // Compare photos
+            compareButton.addEventListener('click', async () => {
+                if (!referenceDescriptor) {
+                    updateStatus('Please upload and process a reference photo first!', 'error');
+                    return;
+                }
+
+                updateStatus('Comparing faces...', 'loading');
+
+                try {
+                    const detection = await faceapi.detectSingleFace(capturedImage)
+                        .withFaceLandmarks()
+                        .withFaceDescriptor();
+
+                    if (detection) {
+                        const distance = faceapi.euclideanDistance(referenceDescriptor, detection.descriptor);
+                        const threshold = 0.6;
+                        const similarity = ((1 - distance) * 100).toFixed(1);
+
+                        if (distance < threshold) {
+                            updateStatus(`Match found! Similarity: ${similarity}%`, 'success');
+                        } else {
+                            updateStatus(`No match. Similarity: ${similarity}%`, 'error');
+                        }
+                    } else {
+                        updateStatus('No face detected in captured photo. Please try again.', 'error');
+                    }
+                } catch (err) {
+                    updateStatus('Error comparing faces: ' + err.message, 'error');
+                }
+            });
+        }
+
+        // Helper function to update status
+        function updateStatus(message, type) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = type;
+        }
+    </script>
+</body>
+</html>
