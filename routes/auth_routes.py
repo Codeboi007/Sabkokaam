@@ -1,16 +1,15 @@
 # routes/auth_routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from database import db, Users
-from main import app
+from flask import current_app as app
 from config import allowed_file
 from flask_login import login_user, current_user, logout_user, login_required
 import os
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
 
-@auth_bp.route('/reg', methods=['GET', 'POST'])
+@auth_bp.route('/reg', methods=['GET', 'POST'],endpoint='user_reg')
 def user_reg():
     if request.method == 'POST':
         try:
@@ -60,6 +59,8 @@ def user_reg():
             db.session.rollback()
             flash(f'An unexpected error occurred: {str(e)}', 'error')
     return render_template('reg.html')
+
+auth_bp.add_url_rule('/reg', endpoint='user_reg', view_func=user_reg)
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def user_login():

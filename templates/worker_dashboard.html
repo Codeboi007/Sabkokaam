@@ -46,7 +46,7 @@
         <h1>Welcome, {{ user.name }}!</h1>
         <p>Role: Worker</p>
         <a href="{{ url_for('job.search_jobs') }}">Search Jobs</a>
-        <a href="{{ url_for('auth.logout') }}">Logout</a>
+        <a href="{{ url_for('auth.user_logout') }}">Logout</a>
     </div>
 </body>
 </html>

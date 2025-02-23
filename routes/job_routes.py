@@ -1,4 +1,3 @@
-# routes/job_routes.py
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from database import db, Job, Users
 from elasticsearch import Elasticsearch
@@ -6,6 +5,17 @@ from flask_login import current_user, login_required
 
 job_bp = Blueprint('job', __name__)
 es = Elasticsearch(hosts=["http://localhost:9200"])
+
+# Function to create the index if it doesn't exist
+def create_index(index_name):
+    if not es.indices.exists(index=index_name):
+        es.indices.create(index=index_name)
+        print(f"Index '{index_name}' created.")
+    else:
+        print(f"Index '{index_name}' already exists.")
+
+# Ensure the index exists when the app starts
+create_index("jobs")
 
 @job_bp.route('/post_job', methods=['GET', 'POST'])
 @login_required
@@ -18,7 +28,6 @@ def post_job():
         description = request.form['description']
         location = request.form['location']
         salary = float(request.form['salary'])
-
         new_job = Job(
             title=title,
             description=description,
@@ -28,7 +37,6 @@ def post_job():
         )
         db.session.add(new_job)
         db.session.commit()
-
         es.index(
             index="jobs",
             id=new_job.id,
@@ -44,10 +52,10 @@ def post_job():
         return redirect(url_for('user.dashboard'))
     return render_template('post_job.html')
 
-@job_bp.route('/search_jobs', methods=['GET'])
+@job_bp.route('/search_jobs', methods=['GET', 'POST'])
 @login_required
 def search_jobs():
-    query = request.args.get('q', '')  
+    query = request.args.get('q', '')
     response = es.search(
         index="jobs",
         body={
