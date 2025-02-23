@@ -4,107 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Face Matching App</title>
-    <!-- Load face-api.js from a reliable CDN -->
     <script defer src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            text-align: center;
-        }
-        .container {
-            display: flex;
-            justify-content: space-around;
-            margin-top: 20px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .box {
-            width: 45%;
-            min-width: 300px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-        }
-        #video, #uploadedImage, #capturedImage {
-            width: 100%;
-            max-width: 400px;
-            margin: 10px 0;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 5px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        button:disabled {
-            background-color: #cccccc;
-            cursor: not-allowed;
-        }
-        #status {
-            margin: 20px;
-            padding: 10px;
-            border-radius: 4px;
-        }
-        .success {
-            background-color: #dff0d8;
-            color: #3c763d;
-        }
-        .error {
-            background-color: #f2dede;
-            color: #a94442;
-        }
-        .loading {
-            background-color: #d9edf7;
-            color: #31708f;
-        }
-        #loadingMessage {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: #d9edf7;
-            color: #31708f;
-            padding: 10px;
-            text-align: center;
-            display: none;
-        }
-    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
-    <div id="loadingMessage">Loading face recognition models...</div>
-    <h1>Face Matching App</h1>
-    
-    <div class="container">
-        <div class="box">
-            <h2>Upload Reference Photo</h2>
-            <input type="file" id="fileInput" accept="image/*">
-            <img id="uploadedImage" style="display: none;">
-        </div>
-        
-        <div class="box">
-            <h2>Camera</h2>
-            <video id="video" autoplay playsinline></video>
-            <canvas id="canvas" style="display: none;"></canvas>
-            <img id="capturedImage" style="display: none;">
-            <div>
-                <button id="startCamera">Start Camera</button>
-                <button id="capture" disabled>Capture Photo</button>
-                <button id="retake" style="display: none;">Retake</button>
-                <button id="compare" style="display: none;">Compare Photos</button>
-            </div>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen text-white">
+    <div id="loadingMessage" class="fixed top-0 left-0 right-0 bg-blue-600 text-white py-4 transform -translate-y-full transition-transform duration-500 z-50">
+        <div class="container mx-auto px-4 flex items-center justify-center">
+            <i class="fas fa-spinner fa-spin mr-3"></i>
+            Loading face recognition models...
         </div>
     </div>
 
-    <div id="status"></div>
+    <div class="container mx-auto px-4 py-8">
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+                TU HAI KAY NAI ?
+            </h1>
+            <p class="text-gray-400">Upload a photo and compare it with your camera capture</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="text-center mb-6">
+                    <i class="fas fa-image text-4xl text-blue-400 mb-4"></i>
+                    <h2 class="text-2xl font-semibold">Reference Photo</h2>
+                </div>
+                
+                <div class="relative border-2 border-dashed border-gray-600 rounded-xl p-8 text-center hover:border-blue-400 transition-colors duration-300">
+                    <input type="file" id="fileInput" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10">
+                    <div class="pointer-events-none">
+                        <i class="fas fa-cloud-upload-alt text-3xl text-gray-400 mb-4"></i>
+                        <p class="text-gray-400">Drag & drop or click to upload</p>
+                    </div>
+                    <img id="uploadedImage" class="hidden max-w-full h-auto mx-auto rounded-lg shadow-lg mt-4" alt="Uploaded image">
+                </div>
+            </div>
+
+            <!-- Camera Capture Section -->
+            <div class="bg-gray-800 rounded-2xl p-6 shadow-xl transform hover:scale-[1.02] transition-transform duration-300">
+                <div class="text-center mb-6">
+                    <i class="fas fa-camera text-4xl text-purple-400 mb-4"></i>
+                    <h2 class="text-2xl font-semibold">Camera Capture</h2>
+                </div>
+
+                <div class="relative">
+                    <video id="video" class="hidden w-full rounded-lg shadow-lg" autoplay playsinline></video>
+                    <canvas id="canvas" class="hidden"></canvas>
+                    <img id="capturedImage" class="hidden w-full rounded-lg shadow-lg" alt="Captured image">
+                    
+                    <div class="flex flex-wrap justify-center gap-4 mt-6">
+                        <button id="startCamera" class="px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 flex items-center">
+                            <i class="fas fa-video mr-2"></i>
+                            Start Camera
+                        </button>
+                        <button id="capture" disabled class="px-6 py-3 bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg shadow-lg hover:from-purple-600 hover:to-purple-700 transition-all duration-300 flex items-center opacity-50 cursor-not-allowed">
+                            <i class="fas fa-camera mr-2"></i>
+                            Capture
+                        </button>
+                        <button id="retake" class="hidden px-6 py-3 bg-gradient-to-r from-red-500 to-red-600 rounded-lg shadow-lg hover:from-red-600 hover:to-red-700 transition-all duration-300 flex items-center">
+                            <i class="fas fa-redo mr-2"></i>
+                            Retake
+                        </button>
+                        <button id="compare" class="hidden px-6 py-3 bg-gradient-to-r from-green-500 to-green-600 rounded-lg shadow-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 flex items-center">
+                            <i class="fas fa-Equals mr-2"></i>
+                            Compare
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Status Message -->
+        <div id="status" class="mt-8 max-w-2xl mx-auto overflow-hidden rounded-lg transform transition-all duration-300 scale-0">
+            <div class="p-4 flex items-center justify-center">
+                <i class="mr-3 text-xl"></i>
+                <span class="status-message"></span>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -113,24 +92,34 @@
 
         async function initializeApp() {
             const loadingMessage = document.getElementById('loadingMessage');
-            loadingMessage.style.display = 'block';
+            gsap.to(loadingMessage, {
+                y: 0,
+                duration: 0.5,
+                ease: "power2.out"
+            });
 
             try {
-                // Set the models path
                 const MODEL_URL = 'https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/';
-                
-                // Load all models
                 await Promise.all([
                     faceapi.nets.ssdMobilenetv1.loadFromUri(MODEL_URL),
                     faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
                     faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
                 ]);
 
-                loadingMessage.style.display = 'none';
-                updateStatus('Face recognition models loaded! Ready to use.', 'success');
+                gsap.to(loadingMessage, {
+                    y: '-100%',
+                    duration: 0.5,
+                    ease: "power2.in",
+                    delay: 0.5
+                });
+                updateStatus('Ready to use!', 'success');
                 initializeElements();
             } catch (error) {
-                loadingMessage.style.display = 'none';
+                gsap.to(loadingMessage, {
+                    y: '-100%',
+                    duration: 0.5,
+                    ease: "power2.in"
+                });
                 updateStatus('Error loading models: ' + error.message, 'error');
                 console.error('Error loading models:', error);
             }
@@ -139,104 +128,119 @@
         let referenceDescriptor = null;
 
         function initializeElements() {
-            const video = document.getElementById('video');
-            const canvas = document.getElementById('canvas');
-            const capturedImage = document.getElementById('capturedImage');
-            const uploadedImage = document.getElementById('uploadedImage');
-            const fileInput = document.getElementById('fileInput');
-            const startButton = document.getElementById('startCamera');
-            const captureButton = document.getElementById('capture');
-            const retakeButton = document.getElementById('retake');
-            const compareButton = document.getElementById('compare');
+            const elements = {
+                video: document.getElementById('video'),
+                canvas: document.getElementById('canvas'),
+                capturedImage: document.getElementById('capturedImage'),
+                uploadedImage: document.getElementById('uploadedImage'),
+                fileInput: document.getElementById('fileInput'),
+                startButton: document.getElementById('startCamera'),
+                captureButton: document.getElementById('capture'),
+                retakeButton: document.getElementById('retake'),
+                compareButton: document.getElementById('compare')
+            };
 
-            fileInput.addEventListener('change', async (e) => {
+            elements.fileInput.addEventListener('change', async (e) => {
                 const file = e.target.files[0];
                 if (file) {
                     const reader = new FileReader();
                     reader.onload = async (e) => {
-                        uploadedImage.src = e.target.result;
-                        uploadedImage.style.display = 'block';
+                        elements.uploadedImage.src = e.target.result;
+                        elements.uploadedImage.classList.remove('hidden');
+                        gsap.from(elements.uploadedImage, {
+                            scale: 0,
+                            duration: 0.5,
+                            ease: "back.out"
+                        });
+                        
                         updateStatus('Processing reference photo...', 'loading');
-                
-                        await new Promise(resolve => uploadedImage.onload = resolve);
+                        await new Promise(resolve => elements.uploadedImage.onload = resolve);
                         
                         try {
-                            const detection = await faceapi.detectSingleFace(uploadedImage)
+                            const detection = await faceapi.detectSingleFace(elements.uploadedImage)
                                 .withFaceLandmarks()
                                 .withFaceDescriptor();
                                 
                             if (detection) {
                                 referenceDescriptor = detection.descriptor;
-                                updateStatus('Reference photo processed successfully!', 'success');
+                                updateStatus('Reference photo processed!', 'success');
                             } else {
-                                updateStatus('No face detected in reference photo. Please try another photo.', 'error');
+                                updateStatus('No face detected. Try another photo.', 'error');
                             }
                         } catch (err) {
-                            updateStatus('Error processing reference photo: ' + err.message, 'error');
+                            updateStatus('Error processing photo: ' + err.message, 'error');
                         }
                     };
                     reader.readAsDataURL(file);
                 }
             });
 
-            
-            startButton.addEventListener('click', async () => {
+            elements.startButton.addEventListener('click', async () => {
                 try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { 
+                    const stream = await navigator.mediaDevices.getUserMedia({
+                        video: {
                             width: { ideal: 1280 },
                             height: { ideal: 720 },
                             facingMode: 'user'
-                        } 
+                        }
                     });
-                    video.srcObject = stream;
-                    video.style.display = 'block';
-                    captureButton.disabled = false;
-                    startButton.disabled = true;
-                    updateStatus('Camera started successfully!', 'success');
+                    elements.video.srcObject = stream;
+                    elements.video.classList.remove('hidden');
+                    elements.captureButton.disabled = false;
+                    elements.captureButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    elements.startButton.disabled = true;
+                    elements.startButton.classList.add('opacity-50', 'cursor-not-allowed');
+                    gsap.from(elements.video, {
+                        scale: 0,
+                        duration: 0.5,
+                        ease: "back.out"
+                    });
+                    updateStatus('Camera ready!', 'success');
                 } catch (err) {
-                    updateStatus('Error accessing camera: ' + err.message, 'error');
-                    console.error('Error:', err);
+                    updateStatus('Camera access error: ' + err.message, 'error');
                 }
             });
 
-            
-            captureButton.addEventListener('click', () => {
-                canvas.width = video.videoWidth;
-                canvas.height = video.videoHeight;
-                canvas.getContext('2d').drawImage(video, 0, 0);
-                capturedImage.src = canvas.toDataURL('image/png');
+            elements.captureButton.addEventListener('click', () => {
+                elements.canvas.width = elements.video.videoWidth;
+                elements.canvas.height = elements.video.videoHeight;
+                elements.canvas.getContext('2d').drawImage(elements.video, 0, 0);
+                elements.capturedImage.src = elements.canvas.toDataURL('image/png');
                 
-                video.style.display = 'none';
-                capturedImage.style.display = 'block';
-                captureButton.style.display = 'none';
-                retakeButton.style.display = 'inline';
-                compareButton.style.display = 'inline';
+                elements.video.classList.add('hidden');
+                elements.capturedImage.classList.remove('hidden');
+                elements.captureButton.classList.add('hidden');
+                elements.retakeButton.classList.remove('hidden');
+                elements.compareButton.classList.remove('hidden');
                 
-                updateStatus('Photo captured! Click Compare to match faces.', 'success');
+                gsap.from(elements.capturedImage, {
+                    scale: 0,
+                    duration: 0.5,
+                    ease: "back.out"
+                });
+                
+                updateStatus('Ready to compare!', 'success');
             });
 
-            
-            retakeButton.addEventListener('click', () => {
-                video.style.display = 'block';
-                capturedImage.style.display = 'none';
-                captureButton.style.display = 'inline';
-                retakeButton.style.display = 'none';
-                compareButton.style.display = 'none';
-                updateStatus('Ready to capture new photo', 'success');
+            elements.retakeButton.addEventListener('click', () => {
+                elements.video.classList.remove('hidden');
+                elements.capturedImage.classList.add('hidden');
+                elements.captureButton.classList.remove('hidden');
+                elements.retakeButton.classList.add('hidden');
+                elements.compareButton.classList.add('hidden');
+                updateStatus('Ready for new capture', 'success');
             });
 
-        
-            compareButton.addEventListener('click', async () => {
+            elements.compareButton.addEventListener('click', async () => {
                 if (!referenceDescriptor) {
-                    updateStatus('Please upload and process a reference photo first!', 'error');
+                    updateStatus('Upload a reference photo first!', 'error');
                     return;
                 }
 
                 updateStatus('Comparing faces...', 'loading');
 
                 try {
-                    const detection = await faceapi.detectSingleFace(capturedImage)
+                    const detection = await faceapi.detectSingleFace(elements.capturedImage)
                         .withFaceLandmarks()
                         .withFaceDescriptor();
 
@@ -246,24 +250,59 @@
                         const similarity = ((1 - distance) * 100).toFixed(1);
 
                         if (distance < threshold) {
-                            updateStatus(`Match found! Similarity: ${similarity}%`, 'success');
+                            updateStatus(`Match found! ${similarity}% similar`, 'success');
                         } else {
-                            updateStatus(`No match. Similarity: ${similarity}%`, 'error');
+                            updateStatus(`No match. ${similarity}% similar`, 'error');
                         }
                     } else {
-                        updateStatus('No face detected in captured photo. Please try again.', 'error');
+                        updateStatus('No face detected in capture', 'error');
                     }
                 } catch (err) {
-                    updateStatus('Error comparing faces: ' + err.message, 'error');
+                    updateStatus('Comparison error: ' + err.message, 'error');
                 }
             });
         }
 
-        
         function updateStatus(message, type) {
             const status = document.getElementById('status');
-            status.textContent = message;
-            status.className = type;
+            const statusMessage = status.querySelector('.status-message');
+            const icon = status.querySelector('i');
+            
+            statusMessage.textContent = message;
+            
+            status.className = 'mt-8 max-w-2xl mx-auto overflow-hidden rounded-lg transform transition-all duration-300';
+            icon.className = 'mr-3 text-xl';
+            
+            switch(type) {
+                case 'success':
+                    status.classList.add('bg-green-500');
+                    icon.classList.add('fas', 'fa-check-circle');
+                    break;
+                case 'error':
+                    status.classList.add('bg-red-500');
+                    icon.classList.add('fas', 'fa-exclamation-circle');
+                    break;
+                case 'loading':
+                    status.classList.add('bg-blue-500');
+                    icon.classList.add('fas', 'fa-spinner', 'fa-spin');
+                    break;
+            }
+            
+            gsap.to(status, {
+                scale: 1,
+                duration: 0.5,
+                ease: "back.out"
+            });
+            
+            if (type === 'success') {
+                setTimeout(() => {
+                    gsap.to(status, {
+                        scale: 0,
+                        duration: 0.5,
+                        ease: "power2.in"
+                    });
+                }, 3000);
+            }
         }
     </script>
 </body>
