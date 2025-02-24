@@ -51,6 +51,7 @@ class Application(db.Model):
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
     worker_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending')
+    cover_letter = db.Column(db.Text, nullable=True)  # Add this field
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def serialize(self):
@@ -59,5 +60,6 @@ class Application(db.Model):
             "job_id": self.job_id,
             "worker_id": self.worker_id,
             "status": self.status,
+            "cover_letter": self.cover_letter,
             "applied_at": self.applied_at
         }

@@ -29,6 +29,29 @@
         p {
             text-align: center;
         }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #218838;
+        }
         a {
             display: block;
             text-align: center;
@@ -45,7 +68,14 @@
     <div class="container">
         <h1>Welcome, {{ user.name }}!</h1>
         <p>Role: Worker</p>
-        <a href="{{ url_for('job.search_jobs') }}">Search Jobs</a>
+        
+        <form method="GET" action="{{ url_for('job.search_jobs') }}">
+            <label for="query">Search Jobs</label>
+            <input type="text" id="query" name="q" placeholder="Enter search term" required>
+            <button type="submit">Search</button>
+        </form>
+
+        <a href="{{ url_for('user.view_applications') }}">View Applications</a>
         <a href="{{ url_for('auth.user_logout') }}">Logout</a>
     </div>
 </body>

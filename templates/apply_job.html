@@ -38,6 +38,13 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
         button {
             width: 100%;
             padding: 10px;
@@ -76,9 +83,12 @@
 <body>
     <div class="container">
         <h2>Apply for Job</h2>
-        <form method="POST" action="{{ url_for('job.apply_job', job_id=job.id) }}">
+        <form method="POST" action="{{ url_for('application.apply_job', job_id=job.id) }}" enctype="multipart/form-data">
             <label for="cover_letter">Cover Letter</label>
             <textarea id="cover_letter" name="cover_letter" required></textarea>
+
+            <label for="face_image">Upload Face Image</label>
+            <input type="file" id="face_image" name="face_image" accept="image/*" required>
 
             <button type="submit">Apply</button>
         </form>

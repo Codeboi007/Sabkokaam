@@ -49,7 +49,7 @@
         <p>Location: {{ job.location }}</p>
         <p>Salary: ₹{{ job.salary }}</p>
         <p>Posted By: {{ job.employer.name }}</p>
-        <a href="{{ url_for('job.apply_job', job_id=job.id) }}">Apply for this Job</a>
+        <a href="{{ url_for('application.apply_job', job_id=job.id) }}">Apply for this Job</a>
         <a href="{{ url_for('job.search_jobs') }}">Back to Search Results</a>
     </div>
 </body>

@@ -22,9 +22,10 @@ login_manager.login_view = 'auth.user_login'
 
 with app.app_context():
     db.create_all()
+    from routes.job_routes import create_index
+    create_index("jobs")
 
-from routes.job_routes import create_index
-create_index("jobs")
+
 
 @login_manager.user_loader
 def load_user(user_id):
