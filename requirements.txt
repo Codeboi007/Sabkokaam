@@ -1,0 +1,9 @@
+flask
+flask_sqlalchemy
+flask_login
+werkzeug
+pymysql
+elasticsearch
+opencv-python
+numpy
+face_recognition
