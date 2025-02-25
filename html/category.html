@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Selection - Sabko Kaam</title>
+  <style>
+    /* General Styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #f5f7fa 0%, #dcf8e8 100%);
+      color: #333;
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 650px;
+      width: 100%;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* Header Styles */
+    .header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .header h1 {
+      font-size: 2.4rem;
+      color: #2e7d32;
+      margin-bottom: 10px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .header h1::after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(90deg, #2e7d32, #4caf50);
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+
+    .header .slogan {
+      font-size: 1.25rem;
+      color: #666;
+      font-style: italic;
+      margin-top: 15px;
+    }
+
+    /* Category Selection Styles */
+    .category-selection {
+      text-align: center;
+    }
+
+    .category-selection h2 {
+      font-size: 1.6rem;
+      margin-bottom: 25px;
+      color: #2e7d32;
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .categories label {
+      position: relative;
+      display: flex;
+      align-items: center;
+      padding: 15px 8px;
+      background: #f1f8e9;
+      border: 2px solid #c5e1a5;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      height: 100%;
+    }
+
+    .categories label:hover {
+      background: #dcedc8;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .categories input[type="checkbox"] {
+      margin-right: 10px;
+      accent-color: #2e7d32;
+      width: 18px;
+      height: 18px;
+    }
+
+    .categories input[type="checkbox"]:checked + span {
+      font-weight: 600;
+      color: #2e7d32;
+    }
+
+    .categories label.selected {
+      background: #e8f5e9;
+      border-color: #4caf50;
+    }
+
+    button {
+      background: linear-gradient(90deg, #2e7d32, #4caf50);
+      color: #fff;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(46, 125, 50, 0.3);
+      display: inline-block;
+    }
+
+    button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 7px 20px rgba(46, 125, 50, 0.4);
+    }
+
+    /* Selected Categories Styles */
+    .selected-categories {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .selected-categories h2 {
+      font-size: 1.6rem;
+      margin-bottom: 20px;
+      color: #2e7d32;
+    }
+
+    .selected-categories ul {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 30px;
+    }
+
+    .selected-categories li {
+      background: linear-gradient(90deg, #e8f5e9, #c8e6c9);
+      margin: 0;
+      padding: 12px 18px;
+      border-radius: 30px;
+      font-weight: 500;
+      color: #1b5e20;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+      animation: fadeIn 0.5s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .edit-btn {
+      background: linear-gradient(90deg, #81c784, #66bb6a);
+      margin-top: 10px;
+    }
+    
+    .submit-btn-container {
+      text-align: center;
+      margin-top: 10px;
+    }
+    
+    /* Animation for container */
+    @keyframes pulse {
+      0% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+      50% { box-shadow: 0 15px 40px rgba(46, 125, 50, 0.2); }
+      100% { box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+    }
+    
+    .pulse-animation {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <div class="container pulse-animation">
+    <!-- Header Section -->
+    <header class="header">
+      <h1>Welcome to Sabko Kaam</h1>
+      <p class="slogan">Chhoti soch hatao, har haath ko rozgaar dilao</p>
+    </header>
+
+    <!-- Category Selection Section -->
+    <section class="category-selection">
+      <h2>Select Your Work Categories</h2>
+      <form id="categoryForm">
+        <div class="categories">
+          <label><input type="checkbox" name="category" value="Construction"><span>Construction</span></label>
+          <label><input type="checkbox" name="category" value="Farming"><span>Farming</span></label>
+          <label><input type="checkbox" name="category" value="Agriculture"><span>Agriculture</span></label>
+          <label><input type="checkbox" name="category" value="Cleaning"><span>Cleaning</span></label>
+          <label><input type="checkbox" name="category" value="Sweeping"><span>Sweeping</span></label>
+          <label><input type="checkbox" name="category" value="House Cleaning"><span>House Cleaning</span></label>
+          <label><input type="checkbox" name="category" value="Plumbing"><span>Plumbing</span></label>
+          <label><input type="checkbox" name="category" value="Desk Work"><span>Desk Work</span></label>
+          <label><input type="checkbox" name="category" value="Administration"><span>Administration</span></label>
+        </div>
+        <div class="submit-btn-container">
+          <button type="button" onclick="submitCategories()" class="submit-btn">Submit</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Selected Categories Display -->
+    <section class="selected-categories" id="selectedCategoriesSection" style="display: none;">
+      <h2>Your Selected Categories</h2>
+      <ul id="selectedCategoriesList"></ul>
+      <button type="button" onclick="editCategories()" class="edit-btn">Edit Selection</button>
+    </section>
+  </div>
+
+  <script>
+    // JavaScript for handling category selection and display
+    function submitCategories() {
+      const selected = Array.from(document.querySelectorAll('input[name="category"]:checked'))
+        .map(checkbox => checkbox.value);
+
+      if (selected.length === 0) {
+        alert("Please select at least one category.");
+        return;
+      }
+
+      const list = document.getElementById('selectedCategoriesList');
+      list.innerHTML = ''; // Clear previous selections
+      selected.forEach(category => {
+        const li = document.createElement('li');
+        li.textContent = category;
+        list.appendChild(li);
+      });
+
+      document.getElementById('categoryForm').style.display = 'none';
+      document.getElementById('selectedCategoriesSection').style.display = 'block';
+    }
+
+    function editCategories() {
+      document.getElementById('categoryForm').style.display = 'block';
+      document.getElementById('selectedCategoriesSection').style.display = 'none';
+    }
+    
+    // Add visual feedback when checkboxes are selected
+    document.querySelectorAll('input[name="category"]').forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if (this.checked) {
+          this.parentElement.classList.add('selected');
+        } else {
+          this.parentElement.classList.remove('selected');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
