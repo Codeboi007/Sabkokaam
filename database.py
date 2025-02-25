@@ -1,29 +1,33 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+
 db = SQLAlchemy()
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(200), unique=True, nullable=False)
-    phone = db.Column(db.String(15), nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    role = db.Column(db.Enum('worker', 'employer'), nullable=False)
-    location = db.Column(db.String(100), nullable=False)
-    profile_photo = db.Column(db.String(255), nullable=False)
-    jobs_posted = db.relationship('Job', backref='employer', lazy=True)
-    applications = db.relationship('Application', backref='worker', lazy=True)
+    full_name = db.Column(db.String(100), nullable=False)
+    contact_number = db.Column(db.String(15), nullable=False)
+    alternate_contact = db.Column(db.String(15))
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    aadhar_number = db.Column(db.String(20), nullable=False)
+    aadhar_photo = db.Column(db.String(255))  # Path to Aadhar card photo
+    selfie_photo = db.Column(db.String(255))  # Path to selfie photo
+    password = db.Column(db.String(255), nullable=False)
+    is_verified = db.Column(db.Boolean, default=False)  # Identity verification status
+    country = db.Column(db.String(50), nullable=False)
+    state = db.Column(db.String(50), nullable=False)
+    city = db.Column(db.String(50), nullable=False)
 
     def set_password(self, password):
-        self.password = generate_password_hash(password)
+        self.password = generate_password_hash(password, method='sha256')
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return f"<User {self.name} ({self.role})>"
+        return f"<User {self.full_name})>"
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
