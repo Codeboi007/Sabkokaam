@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SabKoKaam - Rural Employment Platform</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 50px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        .hero {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    background-image: url("C:/Users/SAMARTH/Downloads/working rural indian people.jpg");
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding-top: 70px;
+    position: relative;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6); /* Adjust opacity here */
+}
+
+.hero-content {
+    max-width: 600px;
+    position: relative;
+    z-index: 1; /* Ensures text appears above the overlay */
+}
+
+        
+        .hero-content {
+            max-width: 600px;
+        }
+        
+        .hero-content h2 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-content p {
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            border: 2px solid white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: white;
+            color: var(--primary-color);
+        }
+        
+        .features {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .section-title h2 {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .section-title p {
+            font-size: 18px;
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .feature-card {
+            background-color: var(--light-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-card img {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
+        
+        .feature-card h3 {
+            font-size: 22px;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .how-it-works {
+            padding: 80px 0;
+            background-color: #f9f9f9;
+        }
+        
+        .steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-top: 50px;
+        }
+        
+        .step {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .step-number {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .step h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .testimonials {
+            padding: 80px 0;
+            background-color: white;
+        }
+        
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .testimonial-card {
+            background-color: var(--light-color);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .testimonial-author img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .author-info h4 {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        
+        .author-info p {
+            color: #777;
+        }
+        
+        .cta {
+            padding: 100px 0;
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+        }
+        
+        .cta h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        .cta p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .nav-links li {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+            
+            .hero-content h2 {
+                font-size: 36px;
+            }
+            
+            .hero-btns {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .steps {
+                flex-direction: column;
+            }
+            
+            .step {
+                margin-bottom: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="/api/placeholder/40/40" alt="SabKoKaam Logo">
+                    <h1>SabKoKaam</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Success Stories</a></li>
+                    <li><a href="#contact-support">contact support</a></li>
+                    <li><a href="#" class="btn">Download App</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2><b>Connecting Rural India with Employment Opportunities</b></h2>
+                <p><b>SabKoKaam helps unskilled workers in rural areas find reliable jobs and secure their livelihoods through a simple, accessible platform.</b></p>
+                <div class="hero-btns">
+                    <a href="#" class="btn">Find Work</a>
+                    <a href="#" class="btn btn-secondary">Hire Workers</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-title">
+                <h2>Why Choose SabKoKaam?</h2>
+                <p>Our platform is designed specifically for rural areas, making job hunting simple for everyone.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <img src="/api/placeholder/60/60" alt="Local Jobs Icon">
+                    <h3>Local Opportunities</h3>
+                    <p>Find work close to your village without migrating to cities. Connect with employers in your area for construction, agriculture, and service jobs.</p>
+                </div>
+                <div class="feature-card">
+                    <img src="/api/placeholder/60/60" alt="Voice Support Icon">
+                    <h3>Voice Support</h3>
+                    <p>Our platform supports voice commands and notifications in multiple regional languages, making it accessible even if you can't read.</p>
+                </div>
+                <div class="feature-card">
+                    <img src="/api/placeholder/60/60" alt="Secure Payments Icon">
+                    <h3>Secure Payments</h3>
+                    <p>Get paid fairly and on time through our secure payment system. No more unpaid work or payment delays.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="section-title">
+                <h2>How SabKoKaam Works</h2>
+                <p>Finding work should be simple. Our process makes it easy for everyone.</p>
+            </div>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Register</h3>
+                    <p>Create a simple profile with your skills, location, and availability. No complex forms or documents needed.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Find Jobs</h3>
+                    <p>Browse local job opportunities or receive voice alerts when new jobs match your skills in your area.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Get Hired</h3>
+                    <p>Connect with employers, agree on terms, and start working with the security of our platform.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Get Paid</h3>
+                    <p>Receive payment directly to your account or through local payment methods you trust.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="testimonials" class="testimonials">
+        <div class="container">
+            <div class="section-title">
+                <h2>Success Stories</h2>
+                <p>Hear from people whose lives have been transformed through SabKoKaam.</p>
+            </div>
+            <div class="testimonial-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"I used to walk 10km every day looking for construction work. Now jobs come to me through SabKoKaam, and I earn regularly to support my family."</p>
+                    <div class="testimonial-author">
+                        <img src="/api/placeholder/50/50" alt="Ramesh's photo">
+                        <div class="author-info">
+                            <h4>Ramesh Kumar</h4>
+                            <p>Construction Worker, Bihar</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"As a woman, finding reliable domestic work was challenging. SabKoKaam connected me with good families who respect my work and pay me fairly."</p>
+                    <div class="testimonial-author">
+                        <img src="/api/placeholder/50/50" alt="Lakshmi's photo">
+                        <div class="author-info">
+                            <h4>Lakshmi Devi</h4>
+                            <p>Domestic Worker, Tamil Nadu</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"I needed seasonal agricultural workers for my farm. Through SabKoKaam, I found reliable workers from nearby villages quickly and efficiently."</p>
+                    <div class="testimonial-author">
+                        <img src="/api/placeholder/50/50" alt="Sukhbir's photo">
+                        <div class="author-info">
+                            <h4>Sukhbir Singh</h4>
+                            <p>Farm Owner, Punjab</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta">
+        <div class="container">
+            <h2>Join SabKoKaam Today</h2>
+            <p>Whether you're looking for work or need to hire workers, SabKoKaam connects rural India like never before.</p>
+            <a href="#" class="btn">Get Started Now</a>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SabKoKaam</h3>
+                    <p>Connecting rural workers with meaningful employment opportunities across India.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#testimonials">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">Create Profile</a></li>
+                        <li><a href="#">Skill Development</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Employers</h3>
+                    <ul>
+                        <li><a href="#">Post Jobs</a></li>
+                        <li><a href="#">Find Workers</a></li>
+                        <li><a href="#">Verification Process</a></li>
+                        <li><a href="#">Employer Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SabKoKaam. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
