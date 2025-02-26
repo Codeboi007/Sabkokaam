@@ -123,6 +123,7 @@
         input[type="tel"],
         input[type="email"],
         input[type="password"],
+        input[type="date"],
         select {
             width: 100%;
             padding: 12px 15px;
@@ -415,6 +416,13 @@
                         <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
                     </div>
                     
+                    <!-- Date of Birth field added here -->
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span style="color: red">*</span></label>
+                        <input type="date" id="dob" name="dob" required>
+                        <div class="helper-text">You must be at least 18 years old to register</div>
+                    </div>
+                    
                     <div class="input-row">
                         <div class="form-group">
                             <label for="contact">Contact Number <span style="color: red">*</span></label>
@@ -589,6 +597,13 @@
             const strengthText = document.getElementById('strength-text');
             const step1Indicator = document.querySelector('.form-steps .step:nth-child(1)');
             const step2Indicator = document.querySelector('.form-steps .step:nth-child(2)');
+            const dobInput = document.getElementById('dob');
+            
+            // Set max date for DOB (18 years ago from today)
+            const today = new Date();
+            const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            const maxDate = eighteenYearsAgo.toISOString().split('T')[0];
+            dobInput.setAttribute('max', maxDate);
             
             // Aadhar card upload preview
             const aadharFile = document.getElementById('aadhar-file');
@@ -694,6 +709,26 @@
                     }
                 });
                 
+                // Check DOB for age verification
+                if (dobInput.value) {
+                    const dobDate = new Date(dobInput.value);
+                    const today = new Date();
+                    let age = today.getFullYear() - dobDate.getFullYear();
+                    const monthDiff = today.getMonth() - dobDate.getMonth();
+                    
+                    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+                        age--;
+                    }
+                    
+                    if (age < 18) {
+                        dobInput.style.borderColor = 'red';
+                        alert("You must be at least 18 years old to register.");
+                        isValid = false;
+                    } else {
+                        dobInput.style.borderColor = '';
+                    }
+                }
+                
                 // Check if Aadhar image is uploaded
                 if (!aadharFile.files || !aadharFile.files[0]) {
                     document.getElementById('aadhar-upload').style.borderColor = 'red';
@@ -711,54 +746,5 @@
                     step2.classList.add('active');
                     step1Indicator.classList.remove('active');
                     step2Indicator.classList.add('active');
-                    
+                }
                     // Copy email to second step
-                    loginEmailInput.value = emailInput.value;
-                    
-                    // Stop camera if active
-                    if (stream) {
-                        stream.getTracks().forEach(track => track.stop());
-                    }
-                }
-            });
-            
-            // Back to step 1
-            backBtn.addEventListener('click', function() {
-                step2.classList.remove('active');
-                step1.classList.add('active');
-                step2Indicator.classList.remove('active');
-                step1Indicator.classList.add('active');
-            });
-            
-            // Simple password strength meter
-            passwordInput.addEventListener('input', function() {
-                const password = this.value;
-                
-                if (!password) {
-                    strengthMeter.className = 'strength-meter-fill';
-                    strengthText.textContent = 'Not entered';
-                    return;
-                }
-                
-                let strength = 0;
-                
-                // Check password length
-                if (password.length >= 8) strength += 1;
-                
-                // Check for numbers
-                if (/\d/.test(password)) strength += 1;
-                
-                // Check for special characters
-                if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength += 1;
-                
-                // Check for uppercase and lowercase
-                if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength += 1;
-                
-                // Update strength meter
-                strengthMeter.className = 'strength-meter-fill';
-                if (strength <= 1) {
-                    strengthMeter.classList.add('weak');
-                    strengthText.textContent = 'Weak';
-                } else if (strength <= 3) {
-                    strengthMeter.classList
-                }
