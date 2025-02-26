@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SabKoKaam - Har Haath Ko Rozgaar</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #1b5e20;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        
+        .logo-container {
+            margin-bottom: 15px;
+        }
+        
+        .logo-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-weight: bold;
+            font-size: 24px;
+            color: #1b5e20;
+        }
+        
+        .logo-text {
+            font-size: 48px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        
+        .slogan {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            background-color: #134a19;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #8bc34a;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #8bc34a;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .download-btn {
+            background-color: #8bc34a;
+            color: #1b5e20;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .download-btn:hover {
+            background-color: transparent;
+            color: #8bc34a;
+            border-color: #8bc34a;
+        }
+        
+        /* Search Bar Styles */
+        .search-section {
+            background-color: #e8f5e9;
+            padding: 30px 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-bar {
+            max-width: 700px;
+            margin: 0 auto;
+            display: flex;
+        }
+        
+        .search-bar input {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #1b5e20;
+            border-radius: 30px 0 0 30px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-bar button {
+            padding: 15px 25px;
+            background-color: #1b5e20;
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .search-bar button:hover {
+            background-color: #154c1a;
+            transform: scale(1.05);
+        }
+        
+        /* Job Listings Styles */
+        .job-listings {
+            padding: 50px 0;
+        }
+        
+        .job-listings h2 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1b5e20;
+            font-size: 32px;
+            position: relative;
+        }
+        
+        .job-listings h2::after {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 3px;
+            background-color: #8bc34a;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .job-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            display: flex;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            border-left: 5px solid #1b5e20;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .job-details {
+            flex: 1;
+            padding: 25px;
+        }
+        
+        .job-title {
+            font-size: 24px;
+            color: #1b5e20;
+            margin-bottom: 10px;
+        }
+        
+        .job-description {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        .job-meta {
+            display: flex;
+            margin-top: 15px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        .job-meta-item {
+            background-color: #e8f5e9;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #1b5e20;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        .apply-btn {
+            display: inline-block;
+            background-color: #1b5e20;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-weight: bold;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid #1b5e20;
+            text-align: center;
+        }
+        
+        .apply-btn:hover {
+            background-color: white;
+            color: #1b5e20;
+        }
+        
+        .job-image {
+            width: 150px;
+            background-size: cover;
+            background-position: center;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #1b5e20;
+            color: white;
+            padding: 40px 0 20px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px 10px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #8bc34a;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+        }
+        
+        /* Animation */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .highlight {
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-img">SKK</div>
+                </div>
+                <div class="logo-text">SabKoKaam</div>
+                <div class="slogan">Chhoti soch hatao, har haath ko rozgaar dilao</div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-links">
+                <a href="#">Features</a>
+                <a href="#">How It Works</a>
+                <a href="#">Success Stories</a>
+                <a href="#">Contact Support</a>
+            </div>
+            <a href="#" class="download-btn">Download App</a>
+        </div>
+    </nav>
+    
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="container">
+            <div class="search-bar">
+                <input type="text" placeholder="Search for jobs...">
+                <button>Search</button>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Job Listings Section -->
+    <section class="job-listings">
+        <div class="container">
+            <h2>Based on Your Selected Category</h2>
+            
+            <!-- Job Card 1 -->
+            <div class="job-card">
+                <div class="job-details">
+                    <h3 class="job-title">House Cleaning</h3>
+                    <p class="job-description">We need experienced housekeepers for cleaning a 3BHK apartment. Tasks include dusting, mopping, and bathroom cleaning.</p>
+                    <div class="job-meta">
+                        <div class="job-meta-item">People Needed: 2</div>
+                        <div class="job-meta-item">Expected Earning: ₹1,200</div>
+                    </div>
+                    <a href="#" class="apply-btn">Apply Now</a>
+                </div>
+                <div class="job-image" style="background-image: url('/api/placeholder/150/150');"></div>
+            </div>
+            
+            <!-- Job Card 2 -->
+            <div class="job-card">
+                <div class="job-details">
+                    <h3 class="job-title">Plumbing Work</h3>
+                    <p class="job-description">Immediate requirement for plumbers to fix leaking pipes and install new faucets in a residential building.</p>
+                    <div class="job-meta">
+                        <div class="job-meta-item">People Needed: 1</div>
+                        <div class="job-meta-item">Expected Earning: ₹850</div>
+                    </div>
+                    <a href="#" class="apply-btn">Apply Now</a>
+                </div>
+                <div class="job-image" style="background-image: url('/api/placeholder/150/150');"></div>
+            </div>
+            
+            <!-- Job Card 3 -->
+            <div class="job-card">
+                <div class="job-details">
+                    <h3 class="job-title">Construction Helper</h3>
+                    <p class="job-description">Workers needed at construction site for carrying materials, mixing cement, and assisting senior masons.</p>
+                    <div class="job-meta">
+                        <div class="job-meta-item">People Needed: 8</div>
+                        <div class="job-meta-item">Expected Earning: ₹3,500</div>
+                    </div>
+                    <a href="#" class="apply-btn highlight">Apply Now</a>
+                </div>
+                <div class="job-image" style="background-image: url('/api/placeholder/150/150');"></div>
+            </div>
+            
+            <!-- Job Card 4 -->
+            <div class="job-card">
+                <div class="job-details">
+                    <h3 class="job-title">Electrical Repairs</h3>
+                    <p class="job-description">Electricians needed for fixing circuit issues and installing new electrical fixtures in a commercial complex.</p>
+                    <div class="job-meta">
+                        <div class="job-meta-item">People Needed: 3</div>
+                        <div class="job-meta-item">Expected Earning: ₹2,200</div>
+                    </div>
+                    <a href="#" class="apply-btn">Apply Now</a>
+                </div>
+                <div class="job-image" style="background-image: url('/api/placeholder/150/150');"></div>
+            </div>
+            
+            <!-- Job Card 5 -->
+            <div class="job-card">
+                <div class="job-details">
+                    <h3 class="job-title">Garden Maintenance</h3>
+                    <p class="job-description">Need gardeners for lawn mowing, plant trimming, and overall garden maintenance in a residential society.</p>
+                    <div class="job-meta">
+                        <div class="job-meta-item">People Needed: 4</div>
+                        <div class="job-meta-item">Expected Earning: ₹1,800</div>
+                    </div>
+                    <a href="#" class="apply-btn">Apply Now</a>
+                </div>
+                <div class="job-image" style="background-image: url('/api/placeholder/150/150');"></div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Help & Support</a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 SabKoKaam. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

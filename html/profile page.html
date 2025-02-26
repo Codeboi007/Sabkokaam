@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - SabKoKaam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #1b5e20;
+            color: white;
+            padding: 15px 0;
+            text-align: center;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-container {
+            margin-right: 15px;
+        }
+        
+        .logo-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: #1b5e20;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        /* Navigation Styles */
+        nav {
+            background-color: #134a19;
+            padding: 15px 0;
+            position: sticky;
+            top: 10;
+            z-index: 100;
+        }
+        
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 16px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #8bc34a;
+        }
+        
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: #8bc34a;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+        
+        .user-menu {
+            position: relative;
+        }
+        
+        .user-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #8bc34a;
+            color: #1b5e20;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        /* Profile Section */
+        .profile-container {
+            padding: 40px 0;
+            display: flex;
+            gap: 30px;
+        }
+        
+        .profile-sidebar {
+            width: 300px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+        
+        .profile-content {
+            flex: 1;
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e8f5e9;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: #1b5e20;
+            border: 5px solid #8bc34a;
+        }
+        
+        .profile-name {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1b5e20;
+        }
+        
+        .profile-title {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .profile-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        
+        .star {
+            color: #ffc107;
+            font-size: 20px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sidebar-menu a {
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+        }
+        
+        .sidebar-menu a.active {
+            border-left: 4px solid #1b5e20;
+            font-weight: bold;
+        }
+        
+        /* Profile Tabs */
+        .profile-tabs {
+            margin-bottom: 20px;
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .tab.active {
+            border-bottom-color: #1b5e20;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+        
+        /* Profile Info Section */
+        .profile-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #1b5e20;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .edit-btn {
+            background-color: transparent;
+            border: none;
+            color: #1b5e20;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .skill-tag {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* Work History */
+        .work-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .work-item:last-child {
+            border-bottom: none;
+        }
+        
+        .work-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .work-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        
+        .work-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .work-employer {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .work-description {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Reviews Section */
+        .review-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+        
+        .reviewer-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .review-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .review-rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .review-text {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #1b5e20;
+            color: white;
+            padding: 30px 0 20px;
+            margin-top: 40px;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px 10px;
+            font-size: 16px;
+            transition: color 0.3s ease;
+        }
+        
+        .footer-links a:hover {
+            color: #8bc34a;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .profile-container {
+                flex-direction: column;
+            }
+            
+            .profile-sidebar {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-container">
+                    <div class="logo-img">SKK</div>
+                </div>
+                <div class="logo-text">SabKoKaam</div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-container">
+            <div class="nav-links">
+                <a href="#">Features</a>
+                <a href="#">How It Works</a>
+                <a href="#">Success Stories</a>
+                <a href="#">Contact Support</a>
+            </div>
+            <div class="user-menu">
+                <div class="user-icon">RS</div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Profile Section -->
+    <main class="container profile-container">
+        <!-- Profile Sidebar -->
+        <aside class="profile-sidebar">
+            <div class="profile-avatar">RS</div>
+            <h2 class="profile-name">Rahul Singh</h2>
+            <p class="profile-title">Electrician & Plumber</p>
+            
+            <div class="profile-rating">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">☆</span>
+                <span>(4.2)</span>
+            </div>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Jobs</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">32</div>
+                    <div class="stat-label">Reviews</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2+</div>
+                    <div class="stat-label">Years</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="#" class="active">Profile</a>
+                <a href="#">Jobs History</a>
+                <a href="#">Earnings</a>
+                <a href="#">Certificates</a>
+                <a href="#">Settings</a>
+                <a href="#">Help & Support</a>
+            </div>
+        </aside>
+        
+        <!-- Profile Content -->
+        <div class="profile-content">
+            <div class="profile-tabs">
+                <div class="tab active">Overview</div>
+                <div class="tab">Work History</div>
+                <div class="tab">Reviews</div>
+                <div class="tab">Documents</div>
+            </div>
+            
+            <!-- Personal Information -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Personal Information</h3>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">Rahul Singh</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value">+91 9876543210</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">rahul.singh@example.com</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">Sector 62, Noida, UP</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Age</div>
+                        <div class="info-value">32 years</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Experience</div>
+                        <div class="info-value">7+ years</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Skills Section -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Skills & Expertise</h3>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                
+                <div class="skills-list">
+                    <div class="skill-tag">Electrical Wiring</div>
+                    <div class="skill-tag">Circuit Repair</div>
+                    <div class="skill-tag">Plumbing</div>
+                    <div class="skill-tag">Pipe Fitting</div>
+                    <div class="skill-tag">Water Heater Installation</div>
+                    <div class="skill-tag">LED Installation</div>
+                    <div class="skill-tag">Switch Board Repair</div>
+                    <div class="skill-tag">Bathroom Fitting</div>
+                </div>
+            </section>
+            
+            <!-- Work History -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Recent Work History</h3>
+                    <button class="edit-btn">View All</button>
+                </div>
+                
+                <div class="work-history">
+                    <div class="work-item">
+                        <div class="work-header">
+                            <div class="work-title">Bathroom Plumbing & Fixtures</div>
+                            <div class="work-date">15 Feb 2025</div>
+                        </div>
+                        <div class="work-employer">Client: Sharma Residence</div>
+                        <div class="work-description">
+                            Completed full bathroom renovation including installation of new sink, toilet, shower fixtures, and water pipes. Fixed water pressure issues and ensured no leaks.
+                        </div>
+                    </div>
+                    
+                    <div class="work-item">
+                        <div class="work-header">
+                            <div class="work-title">Electrical Rewiring</div>
+                            <div class="work-date">3 Feb 2025</div>
+                        </div>
+                        <div class="work-employer">Client: Green Park Society</div>
+                        <div class="work-description">
+                            Performed complete rewiring for 2BHK apartment. Installed new circuit breakers, fixed faulty switches, and setup proper grounding for all outlets.
+                        </div>
+                    </div>
+                    
+                    <div class="work-item">
+                        <div class="work-header">
+                            <div class="work-title">Water Heater Repair</div>
+                            <div class="work-date">28 Jan 2025</div>
+                        </div>
+                        <div class="work-employer">Client: Gupta Family</div>
+                        <div class="work-description">
+                            Diagnosed and repaired electric water heater. Replaced heating element and thermostat. Ensured proper temperature regulation and safety features.
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reviews Section -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Client Reviews</h3>
+                    <button class="edit-btn">View All</button>
+                </div>
+                
+                <div class="reviews">
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="reviewer">
+                                <div class="reviewer-avatar">VS</div>
+                                <div>
+                                    <div class="reviewer-name">Vijay Sharma</div>
+                                    <div class="review-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review-date">15 Feb 2025</div>
+                        </div>
+                        <div class="review-text">
+                            Rahul did an excellent job with our bathroom plumbing. He was punctual, professional, and completed the work on time. The bathroom looks great and everything works perfectly. Highly recommended!
+                        </div>
+                    </div>
+                    
+                    <div class="review-item">
+                        <div class="review-header">
+                            <div class="reviewer">
+                                <div class="reviewer-avatar">AK</div>
+                                <div>
+                                    <div class="reviewer-name">Anjali Kumar</div>
+                                    <div class="review-rating">
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">★</span>
+                                        <span class="star">☆</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review-date">4 Feb 2025</div>
+                        </div>
+                        <div class="review-text">
+                            The electrical rewiring was done well. Rahul is knowledgeable and explained everything clearly. Only issue was that the work took longer than initially estimated, but the quality was good.
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <div class="footer-links">
+                <a href="#">About Us</a>
+                <a href="#">Contact Us</a>
+                <a href="#">Terms & Conditions</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Help & Support</a>
+            </div>
+            
+            <div class="copyright">
+                &copy; 2025 SabKoKaam. All rights reserved.
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
