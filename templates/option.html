@@ -224,19 +224,30 @@
                 align-items: center;
             }
         }
+
+
+        .logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img {
+    width: 150px;
+    margin-right: 10px;
+}
     </style>
 </head>
 <body>
     <header>
         <div class="container nav-container">
             <div class="logo">
-                <div class="logo-img">S</div>
-                <div class="logo-text">SabKoKaam</div>
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo">
+                <h1>SabKoKaam</h1>
             </div>
             
             <nav>
                 <ul>
-                    <li><a href="#">Features</a></li>
+                    <li><a href="{{url_for('auth.profile_page')}}">Profile</a></li>
                     <li><a href="#">How it Works</a></li>
                     <li><a href="#">Success Stories</a></li>
                     <li><a href="#">Contact Support</a></li>

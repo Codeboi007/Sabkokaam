@@ -1,8 +1,9 @@
+from contextlib import redirect_stderr
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
-from database import db, Job
+from database import db, Job,UserCategory,Application
 from flask import current_app as app
 import logging
 from elasticsearch import Elasticsearch
@@ -12,6 +13,7 @@ logging.basicConfig(level=logging.DEBUG)
 
 job_bp = Blueprint('job', __name__)
 es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200')])  # Initialize Elasticsearch here
+
 
 # Job Posting Page Route
 @job_bp.route('/post-job', methods=['GET'])
@@ -29,6 +31,7 @@ def create_job():
         people_needed = request.form['people-needed']
         working_hours = request.form['working-hours']
         earnings = request.form['earnings']
+        job_categories = request.form['job-categories']
 
         # Save uploaded job image
         job_image = request.files['job-image']
@@ -48,7 +51,8 @@ def create_job():
             job_image=job_image_path,
             employer_name=current_user.full_name , # Store the employer's name
             employer_email=current_user.email,  # Store the employer's email
-            employer_contact=current_user.contact_number 
+            employer_contact=current_user.contact_number,
+            job_categories=job_categories
             
         )
         db.session.add(new_job)
@@ -64,6 +68,7 @@ def create_job():
             'employer_name': current_user.full_name,
             'employer_email': current_user.email,
             'employer_contact': current_user.contact_number,
+            'job_categories': job_categories,
             'created_at': new_job.created_at
         })
 
@@ -74,12 +79,14 @@ def create_job():
         return jsonify({'success': False, 'error': 'An error occurred during job posting'}), 500
 
 @job_bp.route('/search-job', methods=['GET'])
+@login_required
 def search_job_page():
     return render_template('search-job.html') 
 
 
 # Job Search Route
 @job_bp.route('/search-jobs', methods=['GET'])
+@login_required
 def search_jobs():
     query = request.args.get('q')
     if not query:
@@ -104,8 +111,52 @@ def search_jobs():
 
 
     # Placeholder route for job application
-@job_bp.route('/apply/<int:job_id>', methods=['GET'])
+@job_bp.route('/apply/<int:job_id>', methods=['GET', 'POST'])
 @login_required
 def apply_job(job_id):
     job = Job.query.get_or_404(job_id)
+    
+    if request.method == 'POST':
+        try:
+            # Check if the user has already applied for the job
+            existing_application = Application.query.filter_by(job_id=job_id, worker_id=current_user.id).first()
+            if existing_application:
+                flash('You have already applied for this job.', 'warning')
+                return redirect(url_for('auth.option_page'))
+
+            # Create a new application
+            new_application = Application(
+                job_id=job_id,
+                worker_id=current_user.id,
+                status='pending'
+            )
+            db.session.add(new_application)
+            db.session.commit()
+
+            flash('You have successfully applied for this job!', 'success')
+            return redirect(url_for('auth.option_page'))
+        except Exception as e:
+            logging.error(f"Error during job application: {e}")
+            flash('An error occurred during job application. Please try again.', 'danger')
+            return redirect(url_for('job.apply_job', job_id=job_id))
+
     return render_template('apply-job.html', job=job)
+
+@job_bp.route('/user-category-jobs', methods=['GET'])
+@login_required
+def user_category_jobs():
+    try:
+        # Fetch user's categories
+        user_categories = UserCategory.query.filter_by(user_id=current_user.id).all()
+        categories = [uc.category for uc in user_categories]
+
+        # Fetch jobs that match user's categories
+        jobs = Job.query.filter(Job.job_categories.in_(categories)).all()
+
+        # Serialize job data
+        job_list = [job.serialize() for job in jobs]
+
+        return jsonify({'success': True, 'jobs': job_list})
+    except Exception as e:
+        logging.error(f"Error fetching user category jobs: {e}")
+        return jsonify({'success': False, 'error': 'An error occurred while fetching jobs'}), 500

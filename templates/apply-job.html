@@ -316,7 +316,7 @@
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    <img src="#" alt="SabKoKaam Logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo">
                     <h1>SabKoKaam</h1>
                 </div>
                 <ul class="nav-links">
@@ -400,7 +400,19 @@
             
             <!-- Apply Button -->
             <div class="apply-section">
-                <a href="#" class="apply-btn">Apply Now</a>
+                <h1>Apply for {{ job.job_name }}</h1>
+                <form id="apply-form" action="{{ url_for('job.apply_job', job_id=job.id) }}" method="post">
+                    <button type="submit" class="apply-btn">Apply Now</button>
+                </form>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        <ul class="flashes">
+                            {% for category, message in messages %}
+                                <li class="{{ category }}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
             </div>
         </div>
     </section>
@@ -445,5 +457,6 @@
             </div>
         </div>
     </footer>
+
 </body>
 </html>

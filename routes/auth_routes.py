@@ -72,7 +72,7 @@ def user_login():
             if not user_categories:
                 return redirect(url_for('auth.category_selection'))
             
-            return redirect(url_for('home'))
+            return redirect(url_for('auth.option_page'))
         else:
             flash('Invalid email or password.', 'error')
     return render_template('login.html')
@@ -83,7 +83,7 @@ def category_selection():
     if request.method == 'POST':
         selected_categories = request.form.getlist('category')
         for category in selected_categories:
-            user_category = UserCategory(user_id=current_user.id, category=category)
+            user_category = UserCategory(user_id=current_user.id, user_name=current_user.full_name, category=category)
             db.session.add(user_category)
         db.session.commit()
         return redirect(url_for('auth.option_page'))
@@ -98,8 +98,15 @@ def user_logout():
     return redirect(url_for('auth.user_login'))
 
 
-@auth_bp.route('/option', methods=['GET'])
+@auth_bp.route('/option', methods=['GET','POST'])
 def option_page():
     # You can pass dynamic data to the template here if needed
     return render_template('option.html')
+
+
+@auth_bp.route('/profile')
+@login_required
+def profile_page():
+    user = Users.query.get(current_user.id)
+    return render_template('profile-page.html', user=user)
 

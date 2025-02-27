@@ -328,7 +328,7 @@
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    <img src="/api/placeholder/150/60" alt="SabKoKaam Logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo">
                     <h1>SabKoKaam</h1>
                 </div>
                 <ul class="nav-links">
@@ -405,6 +405,21 @@
     </footer>
 
     <script>
+
+function fetchUserCategoryJobs() {
+    fetch('/user-category-jobs')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                displayJobs(data.jobs);
+            } else {
+                alert(data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
         function searchJobs() {
             const query = document.getElementById('search-input').value;
             fetch(`/job/search-jobs?q=${query}`)

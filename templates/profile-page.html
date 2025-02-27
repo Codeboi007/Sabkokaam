@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile - SabKoKaam</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 150px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            color: #2e7d32;
+            font-size: 50px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #2e7d32;
+        }
+        
+        .btn {
+            background-color: #2e7d32;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        /* Profile Section */
+        .profile-container {
+            padding: 40px 0;
+            display: flex;
+            gap: 30px;
+            margin-top: 100px; /* Added to account for fixed header */
+        }
+        
+        .profile-sidebar {
+            width: 300px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            height: fit-content;
+        }
+        
+        .profile-content {
+            flex: 1;
+        }
+        
+        .profile-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #e8f5e9;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 64px;
+            color: #1b5e20;
+            border: 5px solid #8bc34a;
+        }
+        
+        .profile-name {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #1b5e20;
+        }
+        
+        .profile-title {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .profile-rating {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            gap: 5px;
+        }
+        
+        .star {
+            color: #ffc107;
+            font-size: 20px;
+        }
+        
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+        }
+        
+        .sidebar-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .sidebar-menu a {
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #333;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+        }
+        
+        .sidebar-menu a.active {
+            border-left: 4px solid #1b5e20;
+            font-weight: bold;
+        }
+        
+        /* Profile Tabs */
+        .profile-tabs {
+            margin-bottom: 20px;
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .tab:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .tab.active {
+            border-bottom-color: #1b5e20;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+        
+        /* Profile Info Section */
+        .profile-section {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 20px;
+            color: #1b5e20;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .edit-btn {
+            background-color: transparent;
+            border: none;
+            color: #1b5e20;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        
+        .info-item {
+            margin-bottom: 15px;
+        }
+        
+        .info-label {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            color: #333;
+        }
+        
+        .skills-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .skill-tag {
+            background-color: #e8f5e9;
+            color: #1b5e20;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        /* Work History */
+        .work-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .work-item:last-child {
+            border-bottom: none;
+        }
+        
+        .work-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .work-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1b5e20;
+        }
+        
+        .work-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .work-employer {
+            color: #555;
+            margin-bottom: 10px;
+        }
+        
+        .work-description {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Reviews Section */
+        .review-item {
+            padding: 20px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .reviewer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .reviewer-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #e8f5e9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1b5e20;
+            font-weight: bold;
+        }
+        
+        .reviewer-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .review-date {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .review-rating {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        
+        .review-text {
+            color: #666;
+            line-height: 1.5;
+        }
+        
+        /* Footer Styles - Updated to match first code */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #81c784;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 900px) {
+            .profile-container {
+                flex-direction: column;
+            }
+            
+            .profile-sidebar {
+                width: 100%;
+            }
+            
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .nav-links li {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo">
+                    <h1>SabKoKaam</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Success Stories</a></li>
+                    <li><a href="#contact-support">Contact Support</a></li>
+                    <li><a href="#" class="btn">Download App</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Profile Section -->
+    <main class="container profile-container">
+        <!-- Profile Sidebar -->
+        <aside class="profile-sidebar">
+            <div class="profile-avatar">{{ user.initials }}</div>
+            <h2 class="profile-name">{{ user.full_name }}</h2>
+            <p class="profile-title">{{ user.profession }}</p>
+            
+            <div class="profile-rating">
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">★</span>
+                <span class="star">☆</span>
+                <span>(4.2)</span>
+            </div>
+            
+            <div class="profile-stats">
+                <div class="stat-item">
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Jobs</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">32</div>
+                    <div class="stat-label">Reviews</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-value">2+</div>
+                    <div class="stat-label">Years</div>
+                </div>
+            </div>
+            
+            <div class="sidebar-menu">
+                <a href="#" class="active">Profile</a>
+                <a href="#">Jobs History</a>
+                <a href="#">Earnings</a>
+                <a href="#">Certificates</a>
+                <a href="#">Settings</a>
+                <a href="#">Help & Support</a>
+            </div>
+        </aside>
+        
+        <!-- Profile Content -->
+        <div class="profile-content">
+            <div class="profile-tabs">
+                <div class="tab active">Overview</div>
+                <div class="tab">Work History</div>
+                <div class="tab">Reviews</div>
+                <div class="tab">Documents</div>
+            </div>
+            
+            <!-- Personal Information -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Personal Information</h3>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Full Name</div>
+                        <div class="info-value">{{ user.full_name }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Phone Number</div>
+                        <div class="info-value">{{ user.contact_number }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">{{ user.email }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">{{ user.city }}</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">dob</div>
+                        <div class="info-value">{{ user.dob }} </div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Experience</div>
+                        <div class="info-value">{{ user.experience }} years</div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Skills Section -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Skills & Expertise</h3>
+                    <button class="edit-btn">Edit</button>
+                </div>
+                
+                <div class="skills-list">
+                    {% for skill in user.skills %}
+                        <div class="skill-tag">{{ skill }}</div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+            <!-- Work History -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Recent Work History</h3>
+                    <button class="edit-btn">View All</button>
+                </div>
+                
+                <div class="work-history">
+                    {% for work in user.work_history %}
+                        <div class="work-item">
+                            <div class="work-header">
+                                <div class="work-title">{{ work.title }}</div>
+                                <div class="work-date">{{ work.date }}</div>
+                            </div>
+                            <div class="work-employer">Client: {{ work.client }}</div>
+                            <div class="work-description">{{ work.description }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+            
+            <!-- Reviews Section -->
+            <section class="profile-section">
+                <div class="section-title">
+                    <h3>Client Reviews</h3>
+                    <button class="edit-btn">View All</button>
+                </div>
+                
+                <div class="reviews">
+                    {% for review in user.reviews %}
+                        <div class="review-item">
+                            <div class="review-header">
+                                <div class="reviewer">
+                                    <div class="reviewer-avatar">{{ review.reviewer_initials }}</div>
+                                    <div>
+                                        <div class="reviewer-name">{{ review.reviewer_name }}</div>
+                                        <div class="review-rating">
+                                            {% for i in range(1, 6) %}
+                                                <span class="star">{% if i <= review.rating %}★{% else %}☆{% endif %}</span>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="review-date">{{ review.date }}</div>
+                            </div>
+                            <div class="review-text">{{ review.text }}</div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+    </main>
+    
+    <!-- Footer Section -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SabKoKaam</h3>
+                    <p>Connecting rural workers with meaningful employment opportunities across India.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#testimonials">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">Create Profile</a></li>
+                        <li><a href="#">Skill Development</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Employers</h3>
+                    <ul>
+                        <li><a href="#">Post Jobs</a></li>
+                        <li><a href="#">Find Workers</a></li>
+                        <li><a href="#">Verification Process</a></li>
+                        <li><a href="#">Employer Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SabKoKaam. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

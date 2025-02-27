@@ -30,28 +30,40 @@ class Users(db.Model, UserMixin):
     def __repr__(self):
         return f"<User {self.full_name})>"
 
+
+
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_name = db.Column(db.String(100), nullable=False)
     job_description = db.Column(db.Text, nullable=False)
     people_needed = db.Column(db.Integer, nullable=False)
-    working_hours = db.Column(db.String(50), nullable=False)
-    earnings = db.Column(db.String(50), nullable=False)
+    working_hours = db.Column(db.String(100), nullable=False)
+    earnings = db.Column(db.String(100), nullable=False)
     job_image = db.Column(db.String(200), nullable=True)
+    employer_name = db.Column(db.String(100), nullable=False)
+    employer_email = db.Column(db.String(100), nullable=False)
+    employer_contact = db.Column(db.String(20), nullable=False)
+    job_categories = db.Column(db.Text, nullable=False)  # Store categories as JSON string
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    employer_name = db.Column(db.String(100), nullable=False)  # Store employer's name
-    employer_email = db.Column(db.String(120), nullable=False)  # Store employer's email
-    employer_contact = db.Column(db.String(15), nullable=False)
 
-    def __repr__(self):
-        return f'<Job {self.job_name}>'
+    def __init__(self, job_name, job_description, people_needed, working_hours, earnings, job_image, employer_name, employer_email, employer_contact, job_categories):
+        self.job_name = job_name
+        self.job_description = job_description
+        self.people_needed = people_needed
+        self.working_hours = working_hours
+        self.earnings = earnings
+        self.job_image = job_image
+        self.employer_name = employer_name
+        self.employer_email = employer_email
+        self.employer_contact = employer_contact
+        self.job_categories = job_categories
+        self.created_at = datetime.utcnow()
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
     worker_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending')
-    cover_letter = db.Column(db.Text, nullable=True)  # Add this field
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def serialize(self):
@@ -60,7 +72,6 @@ class Application(db.Model):
             "job_id": self.job_id,
             "worker_id": self.worker_id,
             "status": self.status,
-            "cover_letter": self.cover_letter,
             "applied_at": self.applied_at
         }
 
@@ -68,6 +79,7 @@ class Application(db.Model):
 class UserCategory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(100), nullable=False)
 
     def __repr__(self):
