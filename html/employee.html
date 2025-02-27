@@ -45,7 +45,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 0;
+            padding: 7px 0;
         }
         
         .logo {
@@ -98,19 +98,41 @@
             background-color: #1b5e20;
         }
         
-        /* Profile Card Styles */
+        /* Profile Section Styles */
         .profile-section {
             padding: 120px 0 60px;
             background-color: white;
         }
         
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        .section-title {
+            text-align: center;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            font-size: 32px;
+        }
+        
+        .section-subtitle {
+            text-align: center;
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Profile Card Styles */
         .profile-card {
             background-color: white;
             border-radius: 10px;
             box-shadow: var(--box-shadow);
             overflow: hidden;
-            margin: 0 auto;
-            max-width: 800px;
+            margin-bottom: 30px;
             transition: transform 0.3s ease;
         }
         
@@ -126,8 +148,8 @@
         }
         
         .profile-img {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             object-fit: cover;
             border: 5px solid white;
@@ -135,53 +157,54 @@
         }
         
         .profile-info {
-            margin-left: 30px;
+            margin-left: 20px;
             display: flex;
             flex-direction: column;
             justify-content: center;
         }
         
         .profile-name {
-            font-size: 28px;
+            font-size: 24px;
             color: var(--primary-color);
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .profile-role {
-            font-size: 18px;
+            font-size: 16px;
             color: var(--dark-color);
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         
         .profile-details {
             display: flex;
             align-items: center;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
         
         .profile-details span {
             margin-right: 10px;
             color: var(--primary-color);
-            font-size: 18px;
+            font-size: 16px;
         }
         
         .profile-body {
-            padding: 30px;
+            padding: 25px;
         }
         
         .profile-bio {
             margin-bottom: 20px;
             line-height: 1.7;
+            font-size: 0.95rem;
         }
         
         .skills-section {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .skills-title {
             font-size: 18px;
             color: var(--primary-color);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
         .skills {
@@ -192,11 +215,11 @@
         .skill-tag {
             background-color: var(--secondary-color);
             color: var(--dark-color);
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 20px;
-            margin-right: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
             font-weight: 500;
         }
         
@@ -204,12 +227,12 @@
             background-color: var(--primary-color);
             color: white;
             border: none;
-            padding: 12px 24px;
+            padding: 10px 20px;
             border-radius: 5px;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-top: 10px;
+            margin-top: 5px;
             width: 100%;
             font-weight: 500;
         }
@@ -220,9 +243,9 @@
         
         .contact-info {
             background-color: #f9f9f9;
-            padding: 20px;
+            padding: 15px;
             border-radius: 5px;
-            margin-top: 20px;
+            margin-top: 15px;
             display: none;
             animation: fadeIn 0.4s ease forwards;
         }
@@ -241,7 +264,7 @@
         .contact-item {
             display: flex;
             align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
         .contact-item:last-child {
@@ -251,17 +274,18 @@
         .contact-icon {
             background-color: var(--primary-color);
             color: white;
-            width: 36px;
-            height: 36px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-right: 15px;
+            margin-right: 12px;
+            font-size: 14px;
         }
         
         .contact-text {
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .contact-text a {
@@ -271,6 +295,67 @@
         
         .contact-text a:hover {
             text-decoration: underline;
+        }
+        
+        /* Filter Controls */
+        .filter-controls {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 30px;
+        }
+        
+        .filter-title {
+            font-size: 18px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .filter-group {
+            margin-bottom: 15px;
+        }
+        
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .filter-group select, .filter-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .filter-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        
+        .filter-actions button {
+            padding: 8px 16px;
+            margin-left: 10px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .filter-actions .apply-filter {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .filter-actions .reset-filter {
+            background-color: #f4f4f4;
         }
         
         footer {
@@ -316,6 +401,12 @@
             border-top: 1px solid #444;
         }
         
+        @media (max-width: 992px) {
+            .profile-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+        
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -339,12 +430,11 @@
             
             .profile-info {
                 margin-left: 0;
-                margin-top: 20px;
+                margin-top: 15px;
             }
             
-            .profile-img {
-                width: 120px;
-                height: 120px;
+            .filter-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -354,14 +444,14 @@
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    <img src="/api/placeholder/150/50" alt="SabKoKaam Logo">
+                    <img src="../images/logo.png" alt="SabKoKaam Logo">
                     <h1>SabKoKaam</h1>
                 </div>
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#testimonials">Success Stories</a></li>
-                    <li><a href="#contact-support">contact support</a></li>
+                    <li><a href="#contact-support">Contact Support</a></li>
                     <li><a href="#" class="btn">Download App</a></li>
                 </ul>
             </nav>
@@ -370,58 +460,281 @@
 
     <section class="profile-section">
         <div class="container">
-            <div class="profile-card">
-                <div class="profile-header">
-                    <img src="/api/placeholder/400/400" alt="Worker Profile" class="profile-img">
-                    <div class="profile-info">
-                        <h2 class="profile-name">Rajesh Patel</h2>
-                        <p class="profile-role">Skilled Construction Worker</p>
-                        <div class="profile-details">
-                            <span>📍</span>
-                            <p>Ahmedabad, Gujarat</p>
+            <h2 class="section-title">Find Skilled Workers</h2>
+            <p class="section-subtitle">Browse through profiles of verified and skilled workers from rural India. Connect directly and hire for your next project.</p>
+            
+            <div class="filter-controls">
+                <h3 class="filter-title">Filter Workers</h3>
+                <div class="filter-grid">
+                    <div class="filter-group">
+                        <label for="location">Location</label>
+                        <select id="location">
+                            <option value="">All Locations</option>
+                            <option value="gujarat">Gujarat</option>
+                            <option value="rajasthan">Rajasthan</option>
+                            <option value="madhya-pradesh">Madhya Pradesh</option>
+                            <option value="maharashtra">Maharashtra</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="skill">Skill Category</label>
+                        <select id="skill">
+                            <option value="">All Skills</option>
+                            <option value="construction">Construction</option>
+                            <option value="agriculture">Agriculture</option>
+                            <option value="carpentry">Carpentry</option>
+                            <option value="household">Household</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="experience">Experience (Years)</label>
+                        <select id="experience">
+                            <option value="">Any Experience</option>
+                            <option value="0-2">0-2 years</option>
+                            <option value="3-5">3-5 years</option>
+                            <option value="5+">5+ years</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="rate">Max Daily Rate (₹)</label>
+                        <input type="number" id="rate" placeholder="Any rate">
+                    </div>
+                </div>
+                <div class="filter-actions">
+                    <button class="reset-filter">Reset</button>
+                    <button class="apply-filter">Apply Filters</button>
+                </div>
+            </div>
+            
+            <div class="profile-grid">
+                <!-- Worker Profile 1 -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="/api/placeholder/400/400" alt="Worker Profile" class="profile-img">
+                        <div class="profile-info">
+                            <h2 class="profile-name">Rajesh Patel</h2>
+                            <p class="profile-role">Skilled Construction Worker</p>
+                            <div class="profile-details">
+                                <span>📍</span>
+                                <p>Ahmedabad, Gujarat</p>
+                            </div>
+                            <div class="profile-details">
+                                <span>💼</span>
+                                <p>7 years experience</p>
+                            </div>
                         </div>
-                        <div class="profile-details">
-                            <span>💼</span>
-                            <p>7 years experience</p>
+                    </div>
+                    <div class="profile-body">
+                        <div class="profile-bio">
+                            <p>Hard-working construction professional with experience in residential and commercial projects. Reliable team player with excellent skills in masonry, flooring, and painting.</p>
+                        </div>
+                        
+                        <div class="skills-section">
+                            <h3 class="skills-title">Skills</h3>
+                            <div class="skills">
+                                <span class="skill-tag">Masonry</span>
+                                <span class="skill-tag">Flooring</span>
+                                <span class="skill-tag">Painting</span>
+                                <span class="skill-tag">Plastering</span>
+                                <span class="skill-tag">Basic Carpentry</span>
+                            </div>
+                        </div>
+                        
+                        <button class="contact-button" onclick="toggleContact(this)">Contact Now</button>
+                        
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">📱</div>
+                                <div class="contact-text">+91 98765 43210</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💬</div>
+                                <div class="contact-text">
+                                    <a href="https://wa.me/919876543210">WhatsApp: +91 98765 43210</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">📅</div>
+                                <div class="contact-text">Available: Monday to Saturday</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💰</div>
+                                <div class="contact-text">Day Rate: ₹650 - ₹800</div>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="profile-body">
-                    <div class="profile-bio">
-                        <p>Hard-working construction professional with experience in residential and commercial projects. Reliable team player with excellent skills in masonry, flooring, and painting. Available for both short-term and long-term projects within 50km of Ahmedabad.</p>
-                    </div>
-                    
-                    <div class="skills-section">
-                        <h3 class="skills-title">Skills</h3>
-                        <div class="skills">
-                            <span class="skill-tag">Masonry</span>
-                            <span class="skill-tag">Flooring</span>
-                            <span class="skill-tag">Painting</span>
-                            <span class="skill-tag">Plastering</span>
-                            <span class="skill-tag">Basic Carpentry</span>
-                        </div>
-                    </div>
-                    
-                    <button class="contact-button" id="contactBtn">Contact Now</button>
-                    
-                    <div class="contact-info" id="contactInfo">
-                        <div class="contact-item">
-                            <div class="contact-icon">📱</div>
-                            <div class="contact-text">+91 98765 43210</div>
-                        </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">💬</div>
-                            <div class="contact-text">
-                                <a href="https://wa.me/919876543210">WhatsApp: +91 98765 43210</a>
+                
+                <!-- Worker Profile 2 -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="/api/placeholder/400/400" alt="Worker Profile" class="profile-img">
+                        <div class="profile-info">
+                            <h2 class="profile-name">Lakshmi Devi</h2>
+                            <p class="profile-role">Household Helper</p>
+                            <div class="profile-details">
+                                <span>📍</span>
+                                <p>Jaipur, Rajasthan</p>
+                            </div>
+                            <div class="profile-details">
+                                <span>💼</span>
+                                <p>5 years experience</p>
                             </div>
                         </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">📅</div>
-                            <div class="contact-text">Available: Monday to Saturday</div>
+                    </div>
+                    <div class="profile-body">
+                        <div class="profile-bio">
+                            <p>Experienced household helper with a focus on cleanliness and organization. Available for daily or weekly cleaning, cooking, and eldercare services. Known for reliability and attention to detail.</p>
                         </div>
-                        <div class="contact-item">
-                            <div class="contact-icon">💰</div>
-                            <div class="contact-text">Day Rate: ₹650 - ₹800</div>
+                        
+                        <div class="skills-section">
+                            <h3 class="skills-title">Skills</h3>
+                            <div class="skills">
+                                <span class="skill-tag">Cleaning</span>
+                                <span class="skill-tag">Cooking</span>
+                                <span class="skill-tag">Elder Care</span>
+                                <span class="skill-tag">Laundry</span>
+                                <span class="skill-tag">Meal Planning</span>
+                            </div>
+                        </div>
+                        
+                        <button class="contact-button" onclick="toggleContact(this)">Contact Now</button>
+                        
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">📱</div>
+                                <div class="contact-text">+91 87654 32109</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💬</div>
+                                <div class="contact-text">
+                                    <a href="https://wa.me/918765432109">WhatsApp: +91 87654 32109</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">📅</div>
+                                <div class="contact-text">Available: Monday to Friday</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💰</div>
+                                <div class="contact-text">Day Rate: ₹500 - ₹600</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Worker Profile 3 -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="/api/placeholder/400/400" alt="Worker Profile" class="profile-img">
+                        <div class="profile-info">
+                            <h2 class="profile-name">Santosh Kumar</h2>
+                            <p class="profile-role">Expert Carpenter</p>
+                            <div class="profile-details">
+                                <span>📍</span>
+                                <p>Indore, Madhya Pradesh</p>
+                            </div>
+                            <div class="profile-details">
+                                <span>💼</span>
+                                <p>12 years experience</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-body">
+                        <div class="profile-bio">
+                            <p>Master craftsman specializing in wooden furniture, doors, and home fixtures. Provides quality woodworking services with an emphasis on durability and aesthetics. Can work with various wood types and finish styles.</p>
+                        </div>
+                        
+                        <div class="skills-section">
+                            <h3 class="skills-title">Skills</h3>
+                            <div class="skills">
+                                <span class="skill-tag">Furniture Making</span>
+                                <span class="skill-tag">Wood Finishing</span>
+                                <span class="skill-tag">Cabinet Making</span>
+                                <span class="skill-tag">Door Installation</span>
+                                <span class="skill-tag">Restoration</span>
+                            </div>
+                        </div>
+                        
+                        <button class="contact-button" onclick="toggleContact(this)">Contact Now</button>
+                        
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">📱</div>
+                                <div class="contact-text">+91 76543 21098</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💬</div>
+                                <div class="contact-text">
+                                    <a href="https://wa.me/917654321098">WhatsApp: +91 76543 21098</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">📅</div>
+                                <div class="contact-text">Available: All Week</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💰</div>
+                                <div class="contact-text">Day Rate: ₹900 - ₹1200</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Worker Profile 4 -->
+                <div class="profile-card">
+                    <div class="profile-header">
+                        <img src="/api/placeholder/400/400" alt="Worker Profile" class="profile-img">
+                        <div class="profile-info">
+                            <h2 class="profile-name">Arjun Singh</h2>
+                            <p class="profile-role">Agricultural Worker</p>
+                            <div class="profile-details">
+                                <span>📍</span>
+                                <p>Nagpur, Maharashtra</p>
+                            </div>
+                            <div class="profile-details">
+                                <span>💼</span>
+                                <p>9 years experience</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="profile-body">
+                        <div class="profile-bio">
+                            <p>Experienced agricultural worker with knowledge of various crops and farming techniques. Skilled in planting, harvesting, and basic equipment operation. Available for seasonal work and willing to travel within the region.</p>
+                        </div>
+                        
+                        <div class="skills-section">
+                            <h3 class="skills-title">Skills</h3>
+                            <div class="skills">
+                                <span class="skill-tag">Crop Cultivation</span>
+                                <span class="skill-tag">Harvesting</span>
+                                <span class="skill-tag">Irrigation</span>
+                                <span class="skill-tag">Equipment Operation</span>
+                                <span class="skill-tag">Organic Farming</span>
+                            </div>
+                        </div>
+                        
+                        <button class="contact-button" onclick="toggleContact(this)">Contact Now</button>
+                        
+                        <div class="contact-info">
+                            <div class="contact-item">
+                                <div class="contact-icon">📱</div>
+                                <div class="contact-text">+91 65432 10987</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💬</div>
+                                <div class="contact-text">
+                                    <a href="https://wa.me/916543210987">WhatsApp: +91 65432 10987</a>
+                                </div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">📅</div>
+                                <div class="contact-text">Available: Seasonal Work</div>
+                            </div>
+                            <div class="contact-item">
+                                <div class="contact-icon">💰</div>
+                                <div class="contact-text">Day Rate: ₹550 - ₹700</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -433,55 +746,63 @@
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
-                    <h3>SabKoKaam</h3>
-                    <p>Connecting rural workers with meaningful employment opportunities across India.</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
+                    <h3>About Us</h3>
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#how-it-works">How It Works</a></li>
-                        <li><a href="#testimonials">Success Stories</a></li>
+                        <li><a href="#">Our Mission</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Our Team</a></li>
+                        <li><a href="#">News & Media</a></li>
                     </ul>
                 </div>
+                
                 <div class="footer-column">
                     <h3>For Workers</h3>
                     <ul>
-                        <li><a href="#">Find Jobs</a></li>
                         <li><a href="#">Create Profile</a></li>
-                        <li><a href="#">Skill Development</a></li>
-                        <li><a href="#">Safety Tips</a></li>
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">Skill Verification</a></li>
+                        <li><a href="#">Success Stories</a></li>
                     </ul>
                 </div>
+                
                 <div class="footer-column">
                     <h3>For Employers</h3>
                     <ul>
-                        <li><a href="#">Post Jobs</a></li>
-                        <li><a href="#">Find Workers</a></li>
-                        <li><a href="#">Verification Process</a></li>
-                        <li><a href="#">Employer Guidelines</a></li>
+                        <li><a href="#">Post Requirements</a></li>
+                        <li><a href="#">Hire Workers</a></li>
+                        <li><a href="#">Verify Workers</a></li>
+                        <li><a href="#">Payment Protection</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul>
+                        <li><a href="#">Support</a></li>
+                        <li><a href="#">Feedback</a></li>
+                        <li><a href="#">Report Issues</a></li>
+                        <li><a href="#">Partner With Us</a></li>
                     </ul>
                 </div>
             </div>
+            
             <div class="footer-bottom">
-                <p>&copy; 2025 SabKoKaam. All rights reserved.</p>
+                <p>&copy; 2025 SabKoKaam - Connecting Rural Workers to Opportunities</p>
             </div>
         </div>
     </footer>
 
     <script>
-        document.getElementById('contactBtn').addEventListener('click', function() {
-            const contactInfo = document.getElementById('contactInfo');
-            
-            if (contactInfo.style.display === 'block') {
-                contactInfo.style.display = 'none';
-                this.textContent = 'Contact Now';
+        function toggleContact(button) {
+            const contactInfo = button.nextElementSibling;
+            if (contactInfo.style.display === "block") {
+                contactInfo.style.display = "none";
+                button.textContent = "Contact Now";
             } else {
-                contactInfo.style.display = 'block';
-                this.textContent = 'Hide Contact Info';
+                contactInfo.style.display = "block";
+                button.textContent = "Hide Contact Info";
             }
-        });
+        }
     </script>
 </body>
 </html>
