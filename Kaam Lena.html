@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaam Lena - Job Listings</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #1b5e20;
+            --light-color: #4c8c4a;
+            --dark-color: #003300;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --spacing: 16px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--text-dark);
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: var(--spacing);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing);
+        }
+        
+        .job-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing);
+            margin-top: var(--spacing);
+        }
+        
+        .job-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .job-image {
+            height: 160px;
+            overflow: hidden;
+        }
+        
+        .job-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .job-content {
+            padding: var(--spacing);
+        }
+        
+        .job-provider {
+            display: flex;
+            align-items: center;
+            margin-bottom: var(--spacing);
+        }
+        
+        .provider-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 10px;
+        }
+        
+        .provider-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .job-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .job-description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: var(--spacing);
+        }
+        
+        .job-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .location {
+            font-size: 14px;
+            color: #888;
+        }
+        
+        .speak-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .speak-btn i {
+            margin-right: 5px;
+        }
+        
+        .speak-btn:hover {
+            background-color: var(--light-color);
+        }
+        
+        /* Language Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: var(--spacing);
+            border-radius: 8px;
+            width: 300px;
+            text-align: center;
+        }
+        
+        .modal-title {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing);
+        }
+        
+        .language-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing);
+        }
+        
+        .language-btn {
+            flex: 1;
+            margin: 0 5px;
+            padding: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .language-btn:hover {
+            background-color: var(--light-color);
+        }
+        
+        .close-btn {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        
+        .close-btn:hover {
+            background-color: #d32f2f;
+        }
+        
+        /* Speaker Icon */
+        .speaker-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z'/%3E%3C/svg%3E");
+            background-size: contain;
+            margin-right: 5px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        #statusMessage {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Kaam Lena</h1>
+        <p>Find work opportunities in your area</p>
+    </header>
+    
+    <div class="container">
+        <div class="job-list" id="jobList">
+            <!-- Job listings will be loaded here -->
+        </div>
+    </div>
+    
+    <!-- Language Selection Modal -->
+    <div class="modal" id="languageModal">
+        <div class="modal-content">
+            <h3 class="modal-title">Select Language</h3>
+            <div class="language-options">
+                <button class="language-btn" data-lang="en">English</button>
+                <button class="language-btn" data-lang="hi">हिन्दी</button>
+            </div>
+            <button class="close-btn" id="closeModal">Close</button>
+            <div id="statusMessage"></div>
+        </div>
+    </div>
+    
+    <!-- Import the Translation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/google-translate-api/1.0.0/index.min.js"></script>
+    
+    <script>
+        // Sample job data with Karnataka/Belagavi locations
+        const jobs = [
+            {
+                id: 1,
+                title: "Farm Labor",
+                description: "Need help with harvesting sugarcane crop. 8 hours of work daily for 5 days.",
+                jobImage: "/api/placeholder/400/250",
+                providerImage: "/api/placeholder/150/150",
+                providerName: "Ramesh Patil",
+                location: "Belagavi, Karnataka"
+            },
+            {
+                id: 2,
+                title: "House Cleaning",
+                description: "Looking for someone to clean a 3BHK house. Dusting, mopping, and bathroom cleaning required.",
+                jobImage: "/api/placeholder/400/250",
+                providerImage: "/api/placeholder/150/150",
+                providerName: "Shivaji Desai",
+                location: "Gokak, Karnataka"
+            },
+            {
+                id: 3,
+                title: "Plumbing Work",
+                description: "Need to fix leaking taps and install new bathroom fixtures. Experienced plumber preferred.",
+                jobImage: "/api/placeholder/400/250",
+                providerImage: "/api/placeholder/150/150",
+                providerName: "Sunil Patil",
+                location: "Bailhongal, Karnataka"
+            },
+            {
+                id: 4,
+                title: "Construction Helper",
+                description: "Looking for 2 helpers for construction site. Need to carry materials and assist masons.",
+                jobImage: "/api/placeholder/400/250",
+                providerImage: "/api/placeholder/150/150",
+                providerName: "Suresh Hegde",
+                location: "Khanapur, Karnataka"
+            },
+            {
+                id: 5,
+                title: "Temple Cleaning",
+                description: "Need volunteers to clean the temple premises and prepare for annual festival.",
+                jobImage: "/api/placeholder/400/250",
+                providerImage: "/api/placeholder/150/150",
+                providerName: "Mahesh Joshi",
+                location: "Athani, Karnataka"
+            }
+        ];
+
+        // Language models for translation
+        // This is a module import - in a real application, you'd load an actual translation module
+        const TranslationModel = {
+            // Load the translation model (simulated)
+            loadModel: async function(language) {
+                console.log(`Loading ${language} translation model...`);
+                // Simulate loading time for the model
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                console.log(`${language} translation model loaded!`);
+                return true;
+            },
+            
+            // Translate text using the model
+            translate: async function(text, targetLanguage) {
+                // In a real application, this would use a proper translation API or library
+                console.log(`Translating to ${targetLanguage}: ${text}`);
+                
+                // Simulate translation delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // For Hindi translations (simplified for demo)
+                if (targetLanguage === 'hi') {
+                    const hindiTranslations = {
+                        "Need help with harvesting sugarcane crop. 8 hours of work daily for 5 days.": 
+                            "गन्ने की फसल की कटाई में मदद की आवश्यकता है। 5 दिनों के लिए प्रतिदिन 8 घंटे काम।",
+                        "Looking for someone to clean a 3BHK house. Dusting, mopping, and bathroom cleaning required.": 
+                            "3BHK घर की सफाई के लिए किसी की तलाश है। धूल झाड़ने, पोंछा लगाने और बाथरूम की सफाई आवश्यक है।",
+                        "Need to fix leaking taps and install new bathroom fixtures. Experienced plumber preferred.": 
+                            "रिसते नल ठीक करने और नए बाथरूम फिक्सचर स्थापित करने की आवश्यकता है। अनुभवी प्लंबर को प्राथमिकता।",
+                        "Looking for 2 helpers for construction site. Need to carry materials and assist masons.": 
+                            "निर्माण स्थल के लिए 2 सहायकों की आवश्यकता है। सामग्री ले जाने और राजमिस्त्री की सहायता करने की आवश्यकता है।",
+                        "Need volunteers to clean the temple premises and prepare for annual festival.": 
+                            "मंदिर परिसर की सफाई और वार्षिक उत्सव की तैयारी के लिए स्वयंसेवकों की आवश्यकता है।"
+                    };
+                    
+                    return hindiTranslations[text] || "हिंदी अनुवाद उपलब्ध नहीं है";
+                }
+                
+                // For English, just return the original text
+                return text;
+            }
+        };
+        
+        // Text-to-Speech model
+        const SpeechModel = {
+            // Load the speech model
+            loadModel: async function(language) {
+                console.log(`Loading ${language} speech model...`);
+                // Simulate loading time for the model
+                await new Promise(resolve => setTimeout(resolve, 800));
+                console.log(`${language} speech model loaded!`);
+                return true;
+            },
+            
+            // Generate speech
+            speak: function(text, language) {
+                return new Promise((resolve, reject) => {
+                    try {
+                        // Create speech synthesis instance
+                        const speech = new SpeechSynthesisUtterance();
+                        speech.text = text;
+                        
+                        // Set language based on selection
+                        if (language === 'en') {
+                            speech.lang = 'en-US';
+                        } else if (language === 'hi') {
+                            speech.lang = 'hi-IN';
+                        }
+                        
+                        // Event handlers
+                        speech.onend = function() {
+                            console.log("Speech completed");
+                            resolve();
+                        };
+                        
+                        speech.onerror = function(event) {
+                            console.error("Speech error:", event);
+                            reject(new Error("Speech synthesis failed"));
+                        };
+                        
+                        // Start speaking
+                        window.speechSynthesis.speak(speech);
+                    } catch (error) {
+                        reject(error);
+                    }
+                });
+            }
+        };
+
+        // Initialize job list
+        document.addEventListener('DOMContentLoaded', function() {
+            const jobList = document.getElementById('jobList');
+            
+            // Generate job cards
+            jobs.forEach(job => {
+                const jobCard = document.createElement('div');
+                jobCard.className = 'job-card';
+                jobCard.innerHTML = `
+                    <div class="job-image">
+                        <img src="${job.jobImage}" alt="${job.title}">
+                    </div>
+                    <div class="job-content">
+                        <div class="job-provider">
+                            <div class="provider-image">
+                                <img src="${job.providerImage}" alt="${job.providerName}">
+                            </div>
+                            <div>
+                                <strong>${job.providerName}</strong>
+                            </div>
+                        </div>
+                        <h3 class="job-title">${job.title}</h3>
+                        <p class="job-description">${job.description}</p>
+                        <div class="job-footer">
+                            <span class="location">${job.location}</span>
+                            <button class="speak-btn" data-id="${job.id}">
+                                <span class="speaker-icon"></span>
+                                Listen
+                            </button>
+                        </div>
+                    </div>
+                `;
+                jobList.appendChild(jobCard);
+            });
+            
+            // Setup event listeners for speak buttons
+            const speakButtons = document.querySelectorAll('.speak-btn');
+            const modal = document.getElementById('languageModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const languageButtons = document.querySelectorAll('.language-btn');
+            const statusMessage = document.getElementById('statusMessage');
+            
+            let currentJobId;
+            
+            // Show language modal when speak button is clicked
+            speakButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    currentJobId = this.getAttribute('data-id');
+                    modal.style.display = 'flex';
+                });
+            });
+            
+            // Close modal
+            closeModalBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                statusMessage.textContent = '';
+            });
+            
+            // Language selection
+            languageButtons.forEach(button => {
+                button.addEventListener('click', async function() {
+                    const language = this.getAttribute('data-lang');
+                    const jobId = currentJobId;
+                    const job = jobs.find(j => j.id == jobId);
+                    
+                    if (job) {
+                        try {
+                            // Show loading indicator
+                            statusMessage.innerHTML = `Loading language models... <div class="loading"></div>`;
+                            
+                            // 1. Load the translation model
+                            await TranslationModel.loadModel(language);
+                            
+                            // 2. Translate the text
+                            statusMessage.innerHTML = `Translating... <div class="loading"></div>`;
+                            const translatedText = await TranslationModel.translate(job.description, language);
+                            
+                            // 3. Load the speech model
+                            statusMessage.innerHTML = `Loading speech model... <div class="loading"></div>`;
+                            await SpeechModel.loadModel(language);
+                            
+                            // 4. Generate and play the speech
+                            statusMessage.innerHTML = `Speaking... <div class="loading"></div>`;
+                            await SpeechModel.speak(translatedText, language);
+                            
+                            // 5. Done
+                            statusMessage.textContent = "Done!";
+                            setTimeout(() => {
+                                modal.style.display = 'none';
+                                statusMessage.textContent = '';
+                            }, 1500);
+                            
+                        } catch (error) {
+                            console.error("Error:", error);
+                            statusMessage.textContent = "An error occurred. Please try again.";
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
