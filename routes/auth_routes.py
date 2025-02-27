@@ -1,11 +1,6 @@
-# routes/auth_routes.py
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template, flash
-from flask_login import login_user, logout_user, login_required
-from werkzeug.utils import secure_filename
-import os
-from database import db, Users
-from flask import current_app as app
-import base64
+from flask_login import login_user, logout_user, login_required,current_user
+from database import db, Users,UserCategory
 import logging
 
 # Configure logging
@@ -13,69 +8,55 @@ logging.basicConfig(level=logging.DEBUG)
 
 auth_bp = Blueprint('auth', __name__)
 
-# Registration Page Route
-@auth_bp.route('/reg', methods=['GET'])
+# Registration Route (Handles both GET and POST)
+@auth_bp.route('/reg', methods=['GET', 'POST'])
 def user_reg():
-    return render_template('registration.html')  # Render the registration page
+    if request.method == 'GET':
+        # Render the registration page for GET requests
+        return render_template('reg.html')
 
-# Handle Registration Form Submission
-@auth_bp.route('/reg', methods=['POST'])
-def user_register():
-    try:
-        # Extract form data
-        full_name = request.form['fullname']
-        contact_number = request.form['contact']
-        alternate_contact = request.form.get('alternate-contact')
-        email = request.form['email']
-        password = request.form['password']
-        aadhar_number = request.form['aadhar']
-        country = request.form['country']
-        state = request.form['state']
-        city = request.form['city']
-        face_verification = request.form['face_verification']
+    elif request.method == 'POST':
+        try:
+            # Extract form data
+            full_name = request.form['fullname']
+            contact_number = request.form['contact']
+            dob=request.form['dob']
+            alternate_contact = request.form.get('alternate-contact')  # Use .get() instead of []
+            email = request.form['email']
+            password = request.form['password']
+            aadhar_number = request.form['aadhar']
+            country = request.form['country']
+            state = request.form['state']
+            city = request.form['city']
 
-        if face_verification != 'true':
-            return jsonify({'success': False, 'error': 'Face verification failed'}), 400
 
-        # Save uploaded files
-        aadhar_photo = request.files['aadhar-photo']
-        selfie_data = request.form['selfie-data']
+            # Create user record
+            new_user = Users(
+                full_name=full_name,
+                dob=dob,
+                contact_number=contact_number,
+                alternate_contact=alternate_contact,
+                email=email,
+                aadhar_number=aadhar_number,
+                is_verified=True,
+                country=country,
+                state=state,
+                city=city
+            )
+            new_user.set_password(password)
+            db.session.add(new_user)
+            db.session.commit()
 
-        if not aadhar_photo or not selfie_data:
-            return jsonify({'success': False, 'error': 'Missing files'}), 400
+            # Flash success message and redirect to login page
+            flash('Account created successfully! Please log in.', 'success')
+            return redirect(url_for('auth.user_login'))
 
-        aadhar_path = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(aadhar_photo.filename))
-        aadhar_photo.save(aadhar_path)
+        except Exception as e:
+            logging.error(f"Error during registration: {e}")
+            flash('An error occurred during registration. Please try again.', 'error')
+            return render_template('reg.html')
 
-        # Decode and save selfie photo
-        selfie_path = os.path.join(app.config['UPLOAD_FOLDER'], f"{full_name}_selfie.png")
-        with open(selfie_path, "wb") as fh:
-            fh.write(base64.b64decode(selfie_data.split(',')[1]))
-
-        # Create user record
-        new_user = Users(
-            full_name=full_name,
-            contact_number=contact_number,
-            alternate_contact=alternate_contact,
-            email=email,
-            aadhar_number=aadhar_number,
-            aadhar_photo=aadhar_path,
-            selfie_photo=selfie_path,
-            is_verified=True,
-            country=country,
-            state=state,
-            city=city
-        )
-        new_user.set_password(password)
-        db.session.add(new_user)
-        db.session.commit()
-
-        # Redirect to login page after successful registration
-        return redirect(url_for('auth.user_login'))
-    except Exception as e:
-        logging.error(f"Error during registration: {e}")
-        return jsonify({'success': False, 'error': 'An error occurred during registration'}), 500
-
+# Login Route
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def user_login():
     if request.method == 'POST':
@@ -85,14 +66,40 @@ def user_login():
         if user and user.check_password(password):
             login_user(user)
             flash('Login successful!', 'success')
-            return redirect(url_for('user.dashboard'))
+            
+            # Redirect to category selection page if categories are not already selected
+            user_categories = UserCategory.query.filter_by(user_id=user.id).all()
+            if not user_categories:
+                return redirect(url_for('auth.category_selection'))
+            
+            return redirect(url_for('home'))
         else:
             flash('Invalid email or password.', 'error')
     return render_template('login.html')
 
+@auth_bp.route('/category-selection', methods=['GET', 'POST'])
+@login_required
+def category_selection():
+    if request.method == 'POST':
+        selected_categories = request.form.getlist('category')
+        for category in selected_categories:
+            user_category = UserCategory(user_id=current_user.id, category=category)
+            db.session.add(user_category)
+        db.session.commit()
+        return redirect(url_for('auth.option_page'))
+    return render_template('category.html')
+
+# Logout Route
 @auth_bp.route('/logout')
 @login_required
 def user_logout():
     logout_user()
     flash('You have been logged out.', 'success')
     return redirect(url_for('auth.user_login'))
+
+
+@auth_bp.route('/option', methods=['GET'])
+def option_page():
+    # You can pass dynamic data to the template here if needed
+    return render_template('option.html')
+

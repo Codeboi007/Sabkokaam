@@ -8,6 +8,7 @@ db = SQLAlchemy()
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     full_name = db.Column(db.String(100), nullable=False)
+    dob = db.Column(db.Date, nullable=False)
     contact_number = db.Column(db.String(15), nullable=False)
     alternate_contact = db.Column(db.String(15))
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -21,7 +22,7 @@ class Users(db.Model, UserMixin):
     city = db.Column(db.String(50), nullable=False)
 
     def set_password(self, password):
-        self.password = generate_password_hash(password, method='sha256')
+        self.password = generate_password_hash(password)
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
@@ -31,24 +32,19 @@ class Users(db.Model, UserMixin):
 
 class Job(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    location = db.Column(db.String(100), nullable=False)
-    salary = db.Column(db.Float, nullable=False)
-    employer_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    job_name = db.Column(db.String(100), nullable=False)
+    job_description = db.Column(db.Text, nullable=False)
+    people_needed = db.Column(db.Integer, nullable=False)
+    working_hours = db.Column(db.String(50), nullable=False)
+    earnings = db.Column(db.String(50), nullable=False)
+    job_image = db.Column(db.String(200), nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    applications = db.relationship('Application', backref='job', lazy=True)
+    employer_name = db.Column(db.String(100), nullable=False)  # Store employer's name
+    employer_email = db.Column(db.String(120), nullable=False)  # Store employer's email
+    employer_contact = db.Column(db.String(15), nullable=False)
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "title": self.title,
-            "description": self.description,
-            "location": self.location,
-            "salary": self.salary,
-            "employer_id": self.employer_id,
-            "created_at": self.created_at
-        }
+    def __repr__(self):
+        return f'<Job {self.job_name}>'
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -67,3 +63,14 @@ class Application(db.Model):
             "cover_letter": self.cover_letter,
             "applied_at": self.applied_at
         }
+
+
+class UserCategory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    category = db.Column(db.String(100), nullable=False)
+
+    def __repr__(self):
+        return f'<UserCategory {self.category}>'
+
+

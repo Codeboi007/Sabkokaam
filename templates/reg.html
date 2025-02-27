@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SabKoKaam - Sign Up</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='reg.css') }}">
+</head>
+<body>
+    <div class="container">
+        <div class="form-header">
+            <h1>Join SabKoKaam</h1>
+            <p>Create your account to find work opportunities near you</p>
+        </div>
+        
+        <div class="form-steps">
+            <div class="step">
+                <div class="step-number"></div>
+                <div class="step-text">Create Account</div>
+            </div>
+        </div>
+        
+        <div class="form-body">
+            <form id="signup-form" action="{{ url_for('auth.user_reg') }}" method="post" enctype="multipart/form-data">
+                <div class="form-message success-message">Your information has been saved successfully!</div>
+                <div class="form-message error-message">Please correct the errors in the form and try again.</div>
+                
+                <!-- Step 1: Personal Details -->
+                <div class="form-step active" >
+                    <div class="form-group">
+                        <label for="fullname">Full Name <span style="color: red">*</span></label>
+                        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+                    </div>
+                    
+                    <!-- Date of Birth field added here -->
+                    <div class="form-group">
+                        <label for="dob">Date of Birth <span style="color: red">*</span></label>
+                        <input type="date" id="dob" name="dob" required>
+                        <div class="helper-text">You must be at least 18 years old to register</div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="contact">Contact Number <span style="color: red">*</span></label>
+                            <input type="tel" id="contact" name="contact" placeholder="Enter your mobile number" required>
+                            <div class="helper-text">We'll send verification code to this number</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="alternate-contact">Alternate Contact</label>
+                            <input type="tel" id="alternate-contact" name="alternate-contact" placeholder="Enter alternate number (optional)">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address <span style="color: red">*</span></label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        <div class="helper-text">You'll use this email to login to your account</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="aadhar">Aadhar Number <span style="color: red">*</span></label>
+                        <input type="text" id="aadhar" name="aadhar" placeholder="Enter your 12-digit Aadhar number"  minlength="12" maxlength="12">
+                        <div class="helper-text">This helps verify your identity and build trust with employers</div>
+                    </div>
+                    
+                    <div class="verification-section">
+                        <div class="verification-heading">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                            Identity Verification
+                        </div>
+                        <p>Please upload your recent photo and take a selfie for identity verification. This helps us create a safe platform for everyone.</p>
+                        
+                        <div class="upload-row">
+                            <div class="upload-column">
+                                <label>Passport Photo <span style="color: red">*</span></label>
+                                <div class="file-upload" id="aadhar-upload">
+                                    <div class="upload-icon">
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M7 16C4.79086 16 3 14.2091 3 12C3 9.79086 4.79086 8 7 8C7.05827 8 7.11622 8.00145 7.17373 8.00433C7.60091 6.20078 9.17453 4.93852 11 4.93852C13.2091 4.93852 15 6.72938 15 8.93852C15 9.05316 14.9968 9.16704 14.9904 9.28M9.5 16.5L12 14M12 14L14.5 16.5M12 14V21M19 15.5C19 18.5376 16.5376 21 13.5 21H13" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                    </div>
+                                    <p>Click to upload Photo</p>
+                                    <small>(photo should be clearly visible)</small>
+                                    <input type="file" id="aadhar-file" accept="image/*" name="aadhar-photo">
+                                    <div class="file-preview" id="aadhar-preview">
+                                        <img id="aadhar-image" src="" alt="Aadhar preview">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="upload-column">
+                                <label>Your Photo <span style="color: red">*</span></label>
+                                <div class="webcam-container" id="webcam-container">
+                                    <video id="webcam" autoplay playsinline style="display: none;"></video>
+                                    <canvas id="canvas" style="display: none;"></canvas>
+                                    <img id="selfie-preview" class="webcam-preview" src="" alt="Selfie preview">
+                                    <div class="webcam-placeholder" id="webcam-placeholder">
+                                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-bottom: 10px;">
+                                            <path d="M15 8H15.01M10.5 4.5H13.5L14.5 6H19.5V18H4.5V6H9.5L10.5 4.5ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                        </svg>
+                                        <p>Take a clear selfie</p>
+                                    </div>
+                                </div>
+                                <button type="button" id="camera-btn" class="camera-btn">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M15 8H15.01M10.5 4.5H13.5L14.5 6H19.5V18H4.5V6H9.5L10.5 4.5ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Take Selfie
+                                </button>
+                                <input type="hidden" id="selfie-data" name="selfie-data"  >
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-row">
+                        <div class="form-group">
+                            <label for="country">Country <span style="color: red">*</span></label>
+                            <select id="country" name="country" required>
+                                <option value="" disabled selected>Select your country</option>
+                                <option value="india">India</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="state">State <span style="color: red">*</span></label>
+                            <select id="state" name="state" required>
+                                <option value="" disabled selected>Select your state</option>
+                                <option value="andhra-pradesh">Andhra Pradesh</option>
+                                <option value="bihar">Bihar</option>
+                                <option value="gujarat">Gujarat</option>
+                                <option value="karnataka">Karnataka</option>
+                                <option value="madhya-pradesh">Madhya Pradesh</option>
+                                <option value="maharashtra">Maharashtra</option>
+                                <option value="punjab">Punjab</option>
+                                <option value="rajasthan">Rajasthan</option>
+                                <option value="tamil-nadu">Tamil Nadu</option>
+                                <option value="uttar-pradesh">Uttar Pradesh</option>
+                                <option value="west-bengal">West Bengal</option>
+                                <!-- More states would be added in a real implementation -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="city">City/Village <span style="color: red">*</span></label>
+                        <input type="text" id="city" name="city" placeholder="Enter your city or village name" required>
+                    </div>
+                
+                <!-- Step 2: Account Creation -->
+                <div class="form-step" >
+                    <div class="form-group">
+                        <label for="login-email">Email</label>
+                        <input type="email" id="login-email" name="login-email" disabled>
+                        <div class="helper-text">You'll use this email to login to your account</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Set Password <span style="color: red">*</span></label>
+                        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                        <div class="password-strength">
+                            Password Strength: <span id="strength-text">Not entered</span>
+                            <div class="strength-meter">
+                                <div class="strength-meter-fill" id="strength-meter"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="confirm-password">Re-enter Password <span style="color: red">*</span></label>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                    </div>
+                    
+                    <div class="password-tips">
+                        <strong>Important:</strong> Please write down your password or remember it securely.
+                        <ul>
+                            <li>Use a combination of letters, numbers, and symbols</li>
+                            <li>Make it at least 8 characters long</li>
+                            <li>Don't share your password with anyone</li>
+                            <li>If you forget your password, you'll need access to your email to reset it</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="form-footer">
+                        <button type="button" id="back-btn" class="btn btn-secondary">Back</button>
+                        <button type="submit" class="btn">Create Account</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+       // Simple JavaScript to handle form navigation and validation
+document.addEventListener('DOMContentLoaded', function() {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const nextBtn = document.getElementById('next-btn');
+    const backBtn = document.getElementById('back-btn');
+    const emailInput = document.getElementById('email');
+    const loginEmailInput = document.getElementById('login-email');
+    const passwordInput = document.getElementById('password');
+    const confirmPasswordInput = document.getElementById('confirm-password');
+    const strengthMeter = document.getElementById('strength-meter');
+    const strengthText = document.getElementById('strength-text');
+    const step1Indicator = document.querySelector('.form-steps .step:nth-child(1)');
+    const step2Indicator = document.querySelector('.form-steps .step:nth-child(2)');
+    const dobInput = document.getElementById('dob');
+    const signupForm = document.getElementById('signup-form');
+    const successMessage = document.querySelector('.success-message');
+    const errorMessage = document.querySelector('.error-message');
+    
+    // Set max date for DOB (18 years ago from today)
+    const today = new Date();
+    const eighteenYearsAgo = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+    const maxDate = eighteenYearsAgo.toISOString().split('T')[0];
+    dobInput.setAttribute('max', maxDate);
+    
+    // Aadhar card upload preview
+    const aadharFile = document.getElementById('aadhar-file');
+    const aadharPreview = document.getElementById('aadhar-preview');
+    const aadharImage = document.getElementById('aadhar-image');
+    
+    aadharFile.addEventListener('change', function() {
+        if (this.files && this.files[0]) {
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                aadharImage.src = e.target.result;
+                aadharPreview.style.display = 'block';
+                document.getElementById('aadhar-upload').style.borderColor = '';
+            }
+            
+            reader.readAsDataURL(this.files[0]);
+        }
+    });
+    
+    // Webcam functionality for selfie
+    const cameraBtn = document.getElementById('camera-btn');
+    const webcamContainer = document.getElementById('webcam-container');
+    const webcamPlaceholder = document.getElementById('webcam-placeholder');
+    const webcam = document.getElementById('webcam');
+    const canvas = document.getElementById('canvas');
+    const selfiePreview = document.getElementById('selfie-preview');
+    const selfieData = document.getElementById('selfie-data');
+    let stream = null;
+    
+    cameraBtn.addEventListener('click', function() {
+        if (selfiePreview.style.display === 'block') {
+            // Reset if already taken
+            selfiePreview.style.display = 'none';
+            webcamPlaceholder.style.display = 'flex';
+            cameraBtn.textContent = 'Take Selfie';
+            cameraBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 8H15.01M10.5 4.5H13.5L14.5 6H19.5V18H4.5V6H9.5L10.5 4.5ZM12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Take Selfie
+            `;
+            selfieData.value = '';
+            
+            // Restart camera
+            startCamera();
+        } else if (webcam.style.display === 'block') {
+            // Take photo
+            const context = canvas.getContext('2d');
+            canvas.width = webcam.videoWidth;
+            canvas.height = webcam.videoHeight;
+            context.drawImage(webcam, 0, 0, canvas.width, canvas.height);
+            
+            // Convert to data URL and display
+            const imageDataURL = canvas.toDataURL('image/png');
+            selfiePreview.src = imageDataURL;
+            selfiePreview.style.display = 'block';
+            selfieData.value = imageDataURL;
+            
+            // Stop camera and update UI
+            webcam.style.display = 'none';
+            webcamPlaceholder.style.display = 'none';
+            cameraBtn.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 4V10M4 4H10M4 4L9 9M20 4V10M20 4H14M20 4L15 9M4 20V14M4 20H10M4 20L9 15M20 20L15 15M20 20V14M20 20H14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Retake Photo
+            `;
+            webcamContainer.style.borderColor = '';
+            
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+        } else {
+            // Start camera
+            startCamera();
+        }
+    });
+    
+    function startCamera() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(videoStream) {
+                    stream = videoStream;
+                    webcam.srcObject = videoStream;
+                    webcam.style.display = 'block';
+                    webcamPlaceholder.style.display = 'none';
+                    webcam.play();
+                })
+                .catch(function(error) {
+                    console.error("Camera error: ", error);
+                    alert("Unable to access camera. Please make sure you've granted camera permissions.");
+                });
+        } else {
+            alert("Your browser doesn't support camera access. Please use a different browser or upload a photo instead.");
+        }
+    }
+    
+    // Password strength checker
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        
+        if (password.length >= 8) {
+            strength += 1;
+        }
+        
+        if (password.match(/[A-Z]/)) {
+            strength += 1;
+        }
+        
+        if (password.match(/[0-9]/)) {
+            strength += 1;
+        }
+        
+        if (password.match(/[^A-Za-z0-9]/)) {
+            strength += 1;
+        }
+        
+        switch (strength) {
+            case 0:
+                strengthMeter.className = 'strength-meter-fill';
+                strengthMeter.style.width = '0';
+                strengthText.textContent = 'Not entered';
+                break;
+            case 1:
+                strengthMeter.className = 'strength-meter-fill weak';
+                strengthText.textContent = 'Weak';
+                break;
+            case 2:
+            case 3:
+                strengthMeter.className = 'strength-meter-fill medium';
+                strengthText.textContent = 'Medium';
+                break;
+            case 4:
+                strengthMeter.className = 'strength-meter-fill strong';
+                strengthText.textContent = 'Strong';
+                break;
+        }
+    });
+    
+    // Move to step 2
+    nextBtn.addEventListener('click', function() {
+        // Simple validation for step 1
+        const requiredFields = step1.querySelectorAll('[required]');
+        let isValid = true;
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = 'red';
+                isValid = false;
+            } else {
+                field.style.borderColor = '';
+            }
+        });
+        
+        // Check DOB for age verification
+        if (dobInput.value) {
+            const dobDate = new Date(dobInput.value);
+            const today = new Date();
+            let age = today.getFullYear() - dobDate.getFullYear();
+            const monthDiff = today.getMonth() - dobDate.getMonth();
+            
+            if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dobDate.getDate())) {
+                age--;
+            }
+            
+            if (age < 18) {
+                dobInput.style.borderColor = 'red';
+                alert("You must be at least 18 years old to register.");
+                isValid = false;
+            } else {
+                dobInput.style.borderColor = '';
+            }
+        }
+        
+        // Check if Aadhar image is uploaded
+        if (!aadharFile.files || !aadharFile.files[0]) {
+            document.getElementById('aadhar-upload').style.borderColor = 'red';
+            isValid = false;
+        }
+        
+        // Check if selfie is taken
+        if (!selfieData.value) {
+            webcamContainer.style.borderColor = 'red';
+            isValid = false;
+        }
+        
+        if (isValid) {
+            // Copy email to second step
+            loginEmailInput.value = emailInput.value;
+            
+            // Move to step 2
+            step1.classList.remove('active');
+            step2.classList.add('active');
+            step1Indicator.classList.remove('active');
+            step2Indicator.classList.add('active');
+        } else {
+            errorMessage.textContent = "Please fill in all required fields correctly.";
+            errorMessage.style.display = 'block';
+            
+            // Hide error message after 3 seconds
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 3000);
+        }
+    });
+    
+    // Move back to step 1
+    backBtn.addEventListener('click', function() {
+        step2.classList.remove('active');
+        step1.classList.add('active');
+        step2Indicator.classList.remove('active');
+        step1Indicator.classList.add('active');
+    });
+    
+    // Form submission
+    signupForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate password fields
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            confirmPasswordInput.style.borderColor = 'red';
+            errorMessage.textContent = "Passwords do not match. Please try again.";
+            errorMessage.style.display = 'block';
+            
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 3000);
+            
+            return;
+        }
+        
+        // Password strength validation
+        if (strengthText.textContent === 'Weak') {
+            passwordInput.style.borderColor = 'red';
+            errorMessage.textContent = "Please create a stronger password.";
+            errorMessage.style.display = 'block';
+            
+            setTimeout(function() {
+                errorMessage.style.display = 'none';
+            }, 3000);
+            
+            return;
+        }
+        
+        // If everything is valid, show success message
+        successMessage.textContent = "Account created successfully! Redirecting to login...";
+        successMessage.style.display = 'block';
+        
+        // In a real app, you would submit the form data to a server here
+        // For demo purposes, we'll just simulate a redirect after 3 seconds
+        setTimeout(function() {
+            alert("Form submitted successfully! In a real application, you would be redirected to login page.");
+            // window.location.href = 'login.html'; // Uncomment in real implementation
+        }, 3000);
+    });
+});
+</script>
+</body>
+</html>

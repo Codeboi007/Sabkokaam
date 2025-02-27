@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Details - SabKoKaam</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 150px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 50px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        /* Main content styles */
+        .main-content {
+            padding: 120px 0 60px;
+        }
+        
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-title h2 {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .page-title p {
+            color: #777;
+            font-size: 18px;
+        }
+        
+        /* Job details box styles */
+        .job-details-box {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .job-details-box {
+                flex-direction: row;
+                min-height: 400px;
+            }
+        }
+        
+        .job-image {
+            flex: 1;
+            background-color: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        
+        .job-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .job-info {
+            flex: 1;
+            padding: 30px;
+        }
+        
+        .job-title {
+            font-size: 28px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .job-description {
+            margin-bottom: 20px;
+            color: #555;
+        }
+        
+        .job-detail {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .detail-label {
+            min-width: 180px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .detail-value {
+            color: #555;
+        }
+        
+        /* Employer info styles */
+        .employer-info {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .employer-info h3 {
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .contact-detail {
+            display: flex;
+            margin-bottom: 15px;
+        }
+        
+        .contact-label {
+            min-width: 150px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+        
+        .contact-value {
+            color: #555;
+        }
+        
+        /* Apply button styles */
+        .apply-section {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        
+        .apply-btn {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 20px;
+            padding: 15px 40px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .apply-btn:hover {
+            background-color: #1b5e20;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .nav-links li {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+            
+            .job-details-box {
+                flex-direction: column;
+            }
+            
+            .job-image {
+                min-height: 250px;
+            }
+            
+            .detail-label, .contact-label {
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="#" alt="SabKoKaam Logo">
+                    <h1>SabKoKaam</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#">Features</a></li>
+                    <li><a href="#">How It Works</a></li>
+                    <li><a href="#">Success Stories</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#" class="btn">Download App</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="main-content">
+        <div class="container">
+            <div class="page-title">
+                <h2>Job Details</h2>
+                <p>Review the opportunity details and apply if interested</p>
+            </div>
+            
+            <!-- Job Details Box -->
+            <div class="job-details-box">
+                <div class="job-image">
+                    <img src="{{ job.job_image or '/api/placeholder/800/600' }}" alt="Job Image">
+                </div>
+                <div class="job-info">
+                    <h2 class="job-title">{{ job.job_name }}</h2>
+                    <p class="job-description">{{ job.job_description }}</p>
+                    
+                    <div class="job-detail">
+                        <span class="detail-label">Application Deadline:</span>
+                        <span class="detail-value">March 10, 2025</span>
+                    </div>
+                    
+                    <div class="job-detail">
+                        <span class="detail-label">Number of Positions:</span>
+                        <span class="detail-value">{{ job.people_needed }} Workers</span>
+                    </div>
+                    
+                    <div class="job-detail">
+                        <span class="detail-label">Expected Earnings:</span>
+                        <span class="detail-value">{{ job.earnings }}</span>
+                    </div>
+                    
+                    <div class="job-detail">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value">Gurgaon, Sector 45</span>
+                    </div>
+                    
+                    <div class="job-detail">
+                        <span class="detail-label">Duration:</span>
+                        <span class="detail-value">3 months (may extend)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Employer Information -->
+            <div class="employer-info">
+                <h3>Employer Contact Information</h3>
+                
+                <div class="contact-detail">
+                    <span class="contact-label">Employer Name:</span>
+                    <span class="contact-value">{{ job.employer_name }}</span>
+                </div>
+                
+                <div class="contact-detail">
+                    <span class="contact-label">Company:</span>
+                    <span class="contact-value">Sharma Constructions Pvt. Ltd.</span>
+                </div>
+                
+                <div class="contact-detail">
+                    <span class="contact-label">Email:</span>
+                    <span class="contact-value">{{ job.employer_email }}</span>
+                </div>
+                
+                <div class="contact-detail">
+                    <span class="contact-label">WhatsApp:</span>
+                    <span class="contact-value">{{ job.employer_contact }}</span>
+                </div>
+            </div>
+            
+            <!-- Apply Button -->
+            <div class="apply-section">
+                <a href="#" class="apply-btn">Apply Now</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SabKoKaam</h3>
+                    <p>Connecting rural workers with meaningful employment opportunities across India.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">Create Profile</a></li>
+                        <li><a href="#">Skill Development</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Employers</h3>
+                    <ul>
+                        <li><a href="#">Post Jobs</a></li>
+                        <li><a href="#">Find Workers</a></li>
+                        <li><a href="#">Verification Process</a></li>
+                        <li><a href="#">Employer Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SabKoKaam. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -3,7 +3,7 @@ from flask_login import LoginManager, current_user
 from config import SQLALCHEMY_DATABASE_URI, SECRET_KEY, UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from database import db
 from routes.auth_routes import auth_bp
-from routes.job_routes import job_bp, create_index
+from routes.job_routes import job_bp
 from routes.user_routes import user_bp
 from routes.application_routes import application_bp
 from routes.face_routes import face_bp
@@ -19,6 +19,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = SQLALCHEMY_DATABASE_URI
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
+app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024 
 
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -33,7 +34,6 @@ face_encoding_model_path = "api_models/mmod_human_face_detector.dat"
 
 with app.app_context():
     db.create_all()
-    create_index("jobs")  # Ensure the index is created
 
 @login_manager.user_loader
 def load_user(user_id):
