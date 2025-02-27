@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SabKoKaam - Post a Job</title>
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --secondary-color: #81c784;
+            --dark-color: #333;
+            --light-color: #f4f4f4;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            line-height: 1.6;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        header {
+            background-color: white;
+            box-shadow: var(--box-shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            width: 150px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 50px;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: var(--primary-color);
+        }
+        
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1b5e20;
+        }
+
+        /* Main content styles */
+        .main-content {
+            padding: 150px 0 80px;
+            background-color: white;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-title h2 {
+            font-size: 36px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+
+        .page-title p {
+            font-size: 18px;
+            color: #777;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        /* Job posting form styles */
+        .job-form-container {
+            background-color: var(--light-color);
+            border-radius: 10px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            margin-bottom: 50px;
+        }
+
+        .job-form {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .job-image {
+            flex: 1;
+            min-width: 300px;
+            background-color: #e8f5e9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+        }
+
+        .image-upload-container {
+            width: 100%;
+            text-align: center;
+        }
+
+        .image-preview {
+            width: 100%;
+            height: 250px;
+            border: 2px dashed #aaaaaa;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            overflow: hidden;
+            position: relative;
+            background-color: #f9f9f9;
+        }
+
+        .image-preview img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .image-preview-placeholder {
+            color: #777;
+            font-size: 16px;
+            text-align: center;
+            padding: 0 15px;
+        }
+
+        .image-preview-placeholder i {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 10px;
+            color: #aaaaaa;
+        }
+
+        .upload-btn-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .upload-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .upload-btn:hover {
+            background-color: #1b5e20;
+        }
+
+        .upload-btn-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .image-requirements {
+            font-size: 14px;
+            color: #777;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .job-details {
+            flex: 2;
+            padding: 30px;
+        }
+
+        .form-title {
+            color: var(--primary-color);
+            margin-bottom: 25px;
+            font-size: 24px;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .required::after {
+            content: " *";
+            color: #e53935;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 15px;
+            padding-right: 45px;
+        }
+
+        /* Multi-select category styles */
+        .category-select-container {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: white;
+        }
+
+        .category-option {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .category-option:hover {
+            background-color: #f0f0f0;
+        }
+
+        .category-option input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .category-option label {
+            cursor: pointer;
+            margin-bottom: 0;
+            font-weight: normal;
+            width: 100%;
+        }
+
+        .selected-categories {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .selected-category {
+            background-color: var(--secondary-color);
+            color: #333;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .selected-category button {
+            background: none;
+            border: none;
+            color: #333;
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            padding: 0;
+        }
+
+        .search-categories {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 30px;
+        }
+
+        .form-actions .btn {
+            padding: 12px 30px;
+            font-size: 16px;
+        }
+
+        .btn-secondary {
+            background-color: #9e9e9e;
+            margin-right: 15px;
+        }
+
+        .btn-secondary:hover {
+            background-color: #757575;
+        }
+
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 60px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-column h3 {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: var(--secondary-color);
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column a:hover {
+            color: white;
+        }
+        
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+        }
+
+        /* Responsive styles */
+        @media (max-width: 992px) {
+            .job-form {
+                flex-direction: column;
+            }
+            
+            .job-image {
+                min-height: 250px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                padding: 15px 0;
+            }
+            
+            .nav-links {
+                margin-top: 15px;
+            }
+            
+            .nav-links li {
+                margin-left: 15px;
+                margin-right: 15px;
+            }
+            
+            .main-content {
+                padding-top: 200px;
+            }
+            
+            .page-title h2 {
+                font-size: 30px;
+            }
+            
+            .job-details {
+                padding: 20px;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .form-actions .btn {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            
+            .btn-secondary {
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="/api/placeholder/150/50" alt="SabKoKaam Logo">
+                    <h1>SabKoKaam</h1>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#how-it-works">How It Works</a></li>
+                    <li><a href="#testimonials">Success Stories</a></li>
+                    <li><a href="#contact-support">Contact Support</a></li>
+                    <li><a href="#" class="btn">Download App</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="main-content">
+        <div class="container">
+            <div class="page-title">
+                <h2>Post a New Job</h2>
+                <p>Create a job listing to find skilled workers for your needs quickly and efficiently.</p>
+            </div>
+            
+            <div class="job-form-container">
+                <form class="job-form">
+                    <div class="job-image">
+                        <h3 class="form-title">Job Image</h3>
+                        <div class="image-upload-container">
+                            <div class="image-preview" id="imagePreview">
+                                <img id="previewImg" src="" alt="Job image preview">
+                                <div class="image-preview-placeholder" id="previewPlaceholder">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M4 16L8.586 11.414C8.96106 11.0391 9.46967 10.8284 10 10.8284C10.5303 10.8284 11.0389 11.0391 11.414 11.414L16 16M14 14L15.586 12.414C15.9611 12.0391 16.4697 11.8284 17 11.8284C17.5303 11.8284 18.0389 12.0391 18.414 12.414L20 14M14 8H14.01M6 20H18C18.5304 20 19.0391 19.7893 19.4142 19.4142C19.7893 19.0391 20 18.5304 20 18V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4H6C5.46957 4 4.96086 4.21071 4.58579 4.58579C4.21071 4.96086 4 5.46957 4 6V18C4 18.5304 4.21071 19.0391 4.58579 19.4142C4.96086 19.7893 5.46957 20 6 20Z" stroke="#AAA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    <p>Upload a relevant job image</p>
+                                </div>
+                            </div>
+                            <div class="upload-btn-wrapper">
+                                <div class="upload-btn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15M17 8L12 3M12 3L7 8M12 3V15" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                    Choose Image
+                                </div>
+                                <input type="file" id="imageUpload" accept="image/*" onchange="previewImage(event)">
+                            </div>
+                            <p class="image-requirements">Recommended: JPG, PNG or GIF. Max size 5MB.</p>
+                        </div>
+                    </div>
+                    <div class="job-details">
+                        <h3 class="form-title">Job Details</h3>
+                        
+                        <div class="form-group">
+                            <label for="job-name" class="required">Job/Work Name</label>
+                            <input type="text" id="job-name" class="form-control" placeholder="Enter job title" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="job-description" class="required">Job Description</label>
+                            <textarea id="job-description" class="form-control" placeholder="Describe the job requirements, location, and other important details" required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="job-category" class="required">Job Categories (Select multiple)</label>
+                            <input type="text" id="category-search" class="search-categories" placeholder="Search categories...">
+                            <div class="category-select-container" id="category-container">
+                                <!-- Categories will be added here by JavaScript -->
+                            </div>
+                            <div class="selected-categories" id="selected-categories">
+                                <!-- Selected categories will appear here -->
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="people-needed" class="required">People Needed</label>
+                            <input type="number" id="people-needed" class="form-control" placeholder="Number of workers required" min="1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="working-hours" class="required">Hours of Working</label>
+                            <input type="text" id="working-hours" class="form-control" placeholder="e.g., 8 hours per day, 6 days a week" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="earnings" class="required">Earnings</label>
+                            <input type="text" id="earnings" class="form-control" placeholder="e.g., ₹500 per day or ₹12,000 per month" required>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn">Post Job</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SabKoKaam</h3>
+                    <p>Connecting rural workers with meaningful employment opportunities across India.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#how-it-works">How It Works</a></li>
+                        <li><a href="#testimonials">Success Stories</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">Create Profile</a></li>
+                        <li><a href="#">Skill Development</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>For Employers</h3>
+                    <ul>
+                        <li><a href="#">Post Jobs</a></li>
+                        <li><a href="#">Find Workers</a></li>
+                        <li><a href="#">Verification Process</a></li>
+                        <li><a href="#">Employer Guidelines</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SabKoKaam. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Category data
+        const jobCategories = [
+            "Construction", "Farming", "Agriculture", "Cleaning", "Sweeping", "House Cleaning", 
+            "Plumbing", "Desk Work", "Administration", "Crop Farming", "Dairy Farming", "Poultry Farming", 
+            "Beekeeping", "Fishing & Aquaculture", "Goat and Sheep Rearing", "Organic Farming", 
+            "Daily Wage Laborer", "Brick Kiln Worker", "Mason", "Road Construction Worker", "Carpenter", 
+            "Electrician", "Painter", "Pottery Making", "Weaving", "Blacksmithing", "Wood Carving", 
+            "Jewelry Making", "Leatherwork", "Street Vending", "Tailoring & Stitching", 
+            "Bicycle or Motorcycle Repair", "Shop Worker", "Running a Tea Stall or Food Cart", 
+            "Making and Selling Pickles, Papads, and Homemade Food", "Candle and Soap Making", 
+            "Cattle Trading", "Housekeeping & Cleaning Services", "Driving (Auto-Rickshaw, Taxi, Tractor)", 
+            "Security Guard", "Waste Picking & Recycling", "Babysitting or Caregiving", 
+            "Gardening & Landscaping", "Domestic Help", "Rural School Assistant", 
+            "Community Health Worker", "Post Office or Banking Correspondent"
+        ];
+
+        // Store selected categories
+        let selectedCategories = [];
+        
+        // Function to preview uploaded image
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const output = document.getElementById('previewImg');
+                output.src = reader.result;
+                output.style.display = 'block';
+                
+                // Hide the placeholder
+                document.getElementById('previewPlaceholder').style.display = 'none';
+            }
+            
+            if(event.target.files[0]) {
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+        
+        // Function to initialize the category selection functionality
+        function initCategorySelection() {
+            const categoryContainer = document.getElementById('category-container');
+            const selectedCategoriesContainer = document.getElementById('selected-categories');
+            const searchInput = document.getElementById('category-search');
+            
+            // Populate category options
+            function renderCategories(categories) {
+                categoryContainer.innerHTML = '';
+                
+                categories.forEach(category => {
+                    const isSelected = selectedCategories.includes(category);
+                    
+                    const categoryOption = document.createElement('div');
+                    categoryOption.className = 'category-option';
+                    categoryOption.innerHTML = `
+                        <input type="checkbox" id="category-${category}" ${isSelected ? 'checked' : ''}>
+                        <label for="category-${category}">${category}</label>
+                    `;
+                    
+                    const checkbox = categoryOption.querySelector('input');
+                    checkbox.addEventListener('change', () => {
+                        if (checkbox.checked) {
+                            if (!selectedCategories.includes(category)) {
+                                selectedCategories.push(category);
+                                renderSelectedCategories();
+                            }
+                        } else {
+                            selectedCategories = selectedCategories.filter(c => c !== category);
+                            renderSelectedCategories();
+                        }
+                    });
+                    
+                    categoryContainer.appendChild(categoryOption);
+                });
+            }
+            
+            // Render selected categories as tags
+            function renderSelectedCategories() {
+                selectedCategoriesContainer.innerHTML = '';
+                
+                selectedCategories.forEach(category => {
+                    const categoryTag = document.createElement('div');
+                    categoryTag.className = 'selected-category';
+                    categoryTag.innerHTML = `
+                        ${category}
+                        <button type="button" aria-label="Remove ${category}">×</button>
+                    `;
+                    
+                    const removeButton = categoryTag.querySelector('button');
+                    removeButton.addEventListener('click', () => {
+                        selectedCategories = selectedCategories.filter(c => c !== category);
+                        renderSelectedCategories();
+                        renderCategories(getFilteredCategories());
+                    });
+                    
+                    selectedCategoriesContainer.appendChild(categoryTag);
+                });
+                
+                // Update hidden input for form submission
+                const selectedCategoriesInput = document.getElementById('selected-categories-input') || 
+                    (() => {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.id = 'selected-categories-input';
+                        input.name = 'job-categories';
+                        document.querySelector('form').appendChild(input);
+                        return input;
+                    })();
+                
+                selectedCategoriesInput.value = JSON.stringify(selectedCategories);
+            }
+            
+            // Filter categories based on search
+            function getFilteredCategories() {
+                const searchTerm = searchInput.value.toLowerCase();
+                return jobCategories.filter(category => 
+                    category.toLowerCase().includes(searchTerm)
+                );
+            }
+            
+            // Initialize search functionality
+            searchInput.addEventListener('input', () => {
+                renderCategories(getFilteredCategories());
+            });
+            
+            // Initial render
+            renderCategories(jobCategories);
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initCategorySelection);
+    </script>
+</body>
+</html>
