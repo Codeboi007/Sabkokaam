@@ -7,7 +7,7 @@
     <style>
         :root {
             --primary: #1b5e20;
-            --secondary: #2E86AB;
+            --secondary: #81c784;
             --dark: #333;
             --light: #f8f8f8;
         }
@@ -34,68 +34,66 @@
             background-color: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             padding: 15px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
         }
         
-        .nav-container {
+        .navbar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 1px 0;
         }
         
         .logo {
             display: flex;
             align-items: center;
-            gap: 10px;
         }
         
-        .logo-img {
-            width: 50px;
-            height: 50px;
-            background-color: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 24px;
+        .logo img {
+            width: 150px;
+            margin-right: 10px;
         }
         
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--dark);
+        .logo h1 {
+            color: var(--primary);
+            font-size: 50px;
         }
         
-        nav ul {
+        .nav-links {
             display: flex;
             list-style: none;
-            gap: 25px;
         }
         
-        nav ul li a {
+        .nav-links li {
+            margin-left: 30px;
+        }
+        
+        .nav-links a {
             text-decoration: none;
             color: var(--dark);
             font-weight: 500;
-            transition: color 0.3s;
+            transition: color 0.3s ease;
         }
         
-        nav ul li a:hover {
+        .nav-links a:hover {
             color: var(--primary);
         }
         
-        .download-btn {
+        .btn {
             background-color: var(--primary);
             color: white;
             padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: bold;
-            cursor: pointer;
             border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
             transition: background-color 0.3s;
         }
         
-        .download-btn:hover {
+        .btn:hover {
             background-color: #1b5e20;
         }
         
@@ -103,6 +101,7 @@
         .hero {
             padding: 80px 0;
             text-align: center;
+            margin-top: 80px; /* Added to account for fixed header */
         }
         
         .hero h1 {
@@ -163,18 +162,20 @@
         footer {
             background-color: var(--dark);
             color: white;
-            padding: 60px 0 30px;
+            padding: 60px 0 20px;
         }
         
-        .footer-container {
+        .footer-content {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
+            gap: 30px;
+            margin-bottom: 40px;
         }
         
         .footer-column h3 {
+            font-size: 20px;
             margin-bottom: 20px;
-            font-size: 18px;
+            color: var(--secondary);
         }
         
         .footer-column ul {
@@ -185,38 +186,36 @@
             margin-bottom: 10px;
         }
         
-        .footer-column ul li a {
+        .footer-column a {
             color: #ddd;
             text-decoration: none;
             transition: color 0.3s;
         }
         
-        .footer-column ul li a:hover {
-            color: var(--primary);
+        .footer-column a:hover {
+            color: white;
         }
         
-        .copyright {
+        .footer-bottom {
             text-align: center;
-            margin-top: 60px;
-            color: #aaa;
-            font-size: 14px;
+            padding-top: 20px;
+            border-top: 1px solid #444;
         }
         
         /* Responsive */
         @media (max-width: 768px) {
-            .nav-container {
+            .navbar {
                 flex-direction: column;
-                gap: 20px;
+                padding: 15px 0;
             }
             
-            nav ul {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 15px;
+            .nav-links {
+                margin-top: 15px;
             }
             
-            .hero h1 {
-                font-size: 32px;
+            .nav-links li {
+                margin-left: 15px;
+                margin-right: 15px;
             }
             
             .options {
@@ -228,22 +227,21 @@
 </head>
 <body>
     <header>
-        <div class="container nav-container">
-            <div class="logo">
-                <div class="logo-img">S</div>
-                <div class="logo-text">SabKoKaam</div>
-            </div>
-            
-            <nav>
-                <ul>
+        <div class="container">
+            <nav class="navbar">
+                <div class="logo">
+                    <img src="C:/Users/SAMARTH/Downloads/sabkokaam-high-resolution-logo.png" alt="SabKoKaam Logo">
+                    <h1>SabKoKaam</h1>
+                </div>
+                
+                <ul class="nav-links">
                     <li><a href="#">Features</a></li>
                     <li><a href="#">How it Works</a></li>
                     <li><a href="#">Success Stories</a></li>
                     <li><a href="#">Contact Support</a></li>
+                    <li><a href="#" class="btn">Download App</a></li>
                 </ul>
             </nav>
-            
-            <button class="download-btn">Download App</button>
         </div>
     </header>
     
@@ -265,45 +263,47 @@
     </section>
     
     <footer>
-        <div class="container footer-container">
-            <div class="footer-column">
-                <h3>SabKoKaam</h3>
-                <p>Connecting rural workers with meaningful employment opportunities across India.</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>SabKoKaam</h3>
+                    <p>Connecting rural workers with meaningful employment opportunities across India.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">How It Works</a></li>
+                        <li><a href="#">Success Stories</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Workers</h3>
+                    <ul>
+                        <li><a href="#">Find Jobs</a></li>
+                        <li><a href="#">Create Profile</a></li>
+                        <li><a href="#">Skill Development</a></li>
+                        <li><a href="#">Safety Tips</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>For Employers</h3>
+                    <ul>
+                        <li><a href="#">Post Jobs</a></li>
+                        <li><a href="#">Find Workers</a></li>
+                        <li><a href="#">Verification Process</a></li>
+                        <li><a href="#">Employer Guidelines</a></li>
+                    </ul>
+                </div>
             </div>
             
-            <div class="footer-column">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">Features</a></li>
-                    <li><a href="#">How It Works</a></li>
-                    <li><a href="#">Success Stories</a></li>
-                </ul>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SabKoKaam. All rights reserved.</p>
             </div>
-            
-            <div class="footer-column">
-                <h3>For Workers</h3>
-                <ul>
-                    <li><a href="#">Find Jobs</a></li>
-                    <li><a href="#">Create Profile</a></li>
-                    <li><a href="#">Skill Development</a></li>
-                    <li><a href="#">Safety Tips</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-column">
-                <h3>For Employers</h3>
-                <ul>
-                    <li><a href="#">Post Jobs</a></li>
-                    <li><a href="#">Find Workers</a></li>
-                    <li><a href="#">Verification Process</a></li>
-                    <li><a href="#">Employer Guidelines</a></li>
-                </ul>
-            </div>
-        </div>
-        
-        <div class="copyright">
-            &copy; 2025 SabKoKaam. All rights reserved.
         </div>
     </footer>
 </body>
