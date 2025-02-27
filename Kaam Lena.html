@@ -229,12 +229,71 @@
             font-size: 14px;
             color: var(--primary-color);
         }
+        
+        /* Initial language selection modal styling */
+        #initialLanguageModal {
+            display: flex;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .initial-modal-content {
+            background-color: white;
+            padding: 24px;
+            border-radius: 8px;
+            width: 350px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        
+        .initial-modal-logo {
+            font-size: 32px;
+            color: var(--primary-color);
+            margin-bottom: 16px;
+        }
+        
+        .initial-modal-title {
+            font-size: 24px;
+            color: var(--primary-color);
+            margin-bottom: 24px;
+        }
+        
+        .initial-language-options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: var(--spacing);
+        }
+        
+        .initial-language-btn {
+            flex: 1;
+            margin: 0 10px;
+            padding: 15px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .initial-language-btn:hover {
+            background-color: var(--light-color);
+            transform: translateY(-3px);
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Kaam Lena</h1>
-        <p>Find work opportunities in your area</p>
+        <h1 id="siteTitle">Kaam Lena</h1>
+        <p id="siteTagline">Find work opportunities in your area</p>
     </header>
     
     <div class="container">
@@ -243,10 +302,10 @@
         </div>
     </div>
     
-    <!-- Language Selection Modal -->
+    <!-- Language Selection Modal for Listen Feature -->
     <div class="modal" id="languageModal">
         <div class="modal-content">
-            <h3 class="modal-title">Select Language</h3>
+            <h3 class="modal-title" id="selectLanguageText">Select Language</h3>
             <div class="language-options">
                 <button class="language-btn" data-lang="en">English</button>
                 <button class="language-btn" data-lang="hi">हिन्दी</button>
@@ -256,16 +315,66 @@
         </div>
     </div>
     
+    <!-- Initial Language Selection Modal -->
+    <div id="initialLanguageModal">
+        <div class="initial-modal-content">
+            <div class="initial-modal-logo">काम Lena</div>
+            <h2 class="initial-modal-title">Select Your Language / अपनी भाषा चुनें</h2>
+            <div class="initial-language-options">
+                <button class="initial-language-btn" data-lang="en">English</button>
+                <button class="initial-language-btn" data-lang="hi">हिन्दी</button>
+            </div>
+        </div>
+    </div>
+    
     <!-- Import the Translation Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/google-translate-api/1.0.0/index.min.js"></script>
     
     <script>
+        // Language translations
+        const translations = {
+            'en': {
+                'siteTitle': 'Kaam Lena',
+                'siteTagline': 'Find work opportunities in your area',
+                'listenButton': 'Listen',
+                'selectLanguageText': 'Select Language',
+                'closeButton': 'Close',
+                'farmLabor': 'Farm Labor',
+                'houseCleaning': 'House Cleaning',
+                'plumbingWork': 'Plumbing Work',
+                'constructionHelper': 'Construction Helper',
+                'templeCleaning': 'Temple Cleaning',
+                'farmLaborDesc': 'Need help with harvesting sugarcane crop. 8 hours of work daily for 5 days.',
+                'houseCleaningDesc': 'Looking for someone to clean a 3BHK house. Dusting, mopping, and bathroom cleaning required.',
+                'plumbingWorkDesc': 'Need to fix leaking taps and install new bathroom fixtures. Experienced plumber preferred.',
+                'constructionHelperDesc': 'Looking for 2 helpers for construction site. Need to carry materials and assist masons.',
+                'templeCleaningDesc': 'Need volunteers to clean the temple premises and prepare for annual festival.'
+            },
+            'hi': {
+                'siteTitle': 'काम लेना',
+                'siteTagline': 'अपने क्षेत्र में काम के अवसर खोजें',
+                'listenButton': 'सुनें',
+                'selectLanguageText': 'भाषा चुनें',
+                'closeButton': 'बंद करें',
+                'farmLabor': 'खेत मजदूरी',
+                'houseCleaning': 'घर की सफाई',
+                'plumbingWork': 'नलसाजी कार्य',
+                'constructionHelper': 'निर्माण सहायक',
+                'templeCleaning': 'मंदिर की सफाई',
+                'farmLaborDesc': 'गन्ने की फसल की कटाई में मदद की आवश्यकता है। 5 दिनों के लिए प्रतिदिन 8 घंटे काम।',
+                'houseCleaningDesc': '3BHK घर की सफाई के लिए किसी की तलाश है। धूल झाड़ने, पोंछा लगाने और बाथरूम की सफाई आवश्यक है।',
+                'plumbingWorkDesc': 'रिसते नल ठीक करने और नए बाथरूम फिक्सचर स्थापित करने की आवश्यकता है। अनुभवी प्लंबर को प्राथमिकता।',
+                'constructionHelperDesc': 'निर्माण स्थल के लिए 2 सहायकों की आवश्यकता है। सामग्री ले जाने और राजमिस्त्री की सहायता करने की आवश्यकता है।',
+                'templeCleaningDesc': 'मंदिर परिसर की सफाई और वार्षिक उत्सव की तैयारी के लिए स्वयंसेवकों की आवश्यकता है।'
+            }
+        };
+        
         // Sample job data with Karnataka/Belagavi locations
         const jobs = [
             {
                 id: 1,
-                title: "Farm Labor",
-                description: "Need help with harvesting sugarcane crop. 8 hours of work daily for 5 days.",
+                title: 'farmLabor',
+                description: 'farmLaborDesc',
                 jobImage: "/api/placeholder/400/250",
                 providerImage: "/api/placeholder/150/150",
                 providerName: "Ramesh Patil",
@@ -273,8 +382,8 @@
             },
             {
                 id: 2,
-                title: "House Cleaning",
-                description: "Looking for someone to clean a 3BHK house. Dusting, mopping, and bathroom cleaning required.",
+                title: 'houseCleaning',
+                description: 'houseCleaningDesc',
                 jobImage: "/api/placeholder/400/250",
                 providerImage: "/api/placeholder/150/150",
                 providerName: "Shivaji Desai",
@@ -282,8 +391,8 @@
             },
             {
                 id: 3,
-                title: "Plumbing Work",
-                description: "Need to fix leaking taps and install new bathroom fixtures. Experienced plumber preferred.",
+                title: 'plumbingWork',
+                description: 'plumbingWorkDesc',
                 jobImage: "/api/placeholder/400/250",
                 providerImage: "/api/placeholder/150/150",
                 providerName: "Sunil Patil",
@@ -291,8 +400,8 @@
             },
             {
                 id: 4,
-                title: "Construction Helper",
-                description: "Looking for 2 helpers for construction site. Need to carry materials and assist masons.",
+                title: 'constructionHelper',
+                description: 'constructionHelperDesc',
                 jobImage: "/api/placeholder/400/250",
                 providerImage: "/api/placeholder/150/150",
                 providerName: "Suresh Hegde",
@@ -300,8 +409,8 @@
             },
             {
                 id: 5,
-                title: "Temple Cleaning",
-                description: "Need volunteers to clean the temple premises and prepare for annual festival.",
+                title: 'templeCleaning',
+                description: 'templeCleaningDesc',
                 jobImage: "/api/placeholder/400/250",
                 providerImage: "/api/placeholder/150/150",
                 providerName: "Mahesh Joshi",
@@ -398,17 +507,32 @@
             }
         };
 
-        // Initialize job list
-        document.addEventListener('DOMContentLoaded', function() {
-            const jobList = document.getElementById('jobList');
+        // Global variable to store current language
+        let currentLanguage = 'en';
+        
+        // Function to update UI text based on selected language
+        function updateUILanguage(language) {
+            currentLanguage = language;
             
-            // Generate job cards
+            // Update header text
+            document.getElementById('siteTitle').textContent = translations[language]['siteTitle'];
+            document.getElementById('siteTagline').textContent = translations[language]['siteTagline'];
+            
+            // Update modal texts
+            document.getElementById('selectLanguageText').textContent = translations[language]['selectLanguageText'];
+            document.getElementById('closeModal').textContent = translations[language]['closeButton'];
+            
+            // Update job listings
+            const jobList = document.getElementById('jobList');
+            jobList.innerHTML = '';
+            
+            // Generate job cards with translated content
             jobs.forEach(job => {
                 const jobCard = document.createElement('div');
                 jobCard.className = 'job-card';
                 jobCard.innerHTML = `
                     <div class="job-image">
-                        <img src="${job.jobImage}" alt="${job.title}">
+                        <img src="${job.jobImage}" alt="${translations[language][job.title]}">
                     </div>
                     <div class="job-content">
                         <div class="job-provider">
@@ -419,13 +543,13 @@
                                 <strong>${job.providerName}</strong>
                             </div>
                         </div>
-                        <h3 class="job-title">${job.title}</h3>
-                        <p class="job-description">${job.description}</p>
+                        <h3 class="job-title">${translations[language][job.title]}</h3>
+                        <p class="job-description">${translations[language][job.description]}</p>
                         <div class="job-footer">
                             <span class="location">${job.location}</span>
                             <button class="speak-btn" data-id="${job.id}">
                                 <span class="speaker-icon"></span>
-                                Listen
+                                ${translations[language]['listenButton']}
                             </button>
                         </div>
                     </div>
@@ -433,7 +557,12 @@
                 jobList.appendChild(jobCard);
             });
             
-            // Setup event listeners for speak buttons
+            // Re-attach event listeners for speak buttons
+            setupSpeakButtons();
+        }
+
+        // Function to setup speak button event listeners
+        function setupSpeakButtons() {
             const speakButtons = document.querySelectorAll('.speak-btn');
             const modal = document.getElementById('languageModal');
             const closeModalBtn = document.getElementById('closeModal');
@@ -456,7 +585,7 @@
                 statusMessage.textContent = '';
             });
             
-            // Language selection
+            // Language selection for speech
             languageButtons.forEach(button => {
                 button.addEventListener('click', async function() {
                     const language = this.getAttribute('data-lang');
@@ -471,9 +600,9 @@
                             // 1. Load the translation model
                             await TranslationModel.loadModel(language);
                             
-                            // 2. Translate the text
+                            // 2. Get translated text from our translations object
                             statusMessage.innerHTML = `Translating... <div class="loading"></div>`;
-                            const translatedText = await TranslationModel.translate(job.description, language);
+                            const textToSpeak = translations[language][job.description];
                             
                             // 3. Load the speech model
                             statusMessage.innerHTML = `Loading speech model... <div class="loading"></div>`;
@@ -481,7 +610,7 @@
                             
                             // 4. Generate and play the speech
                             statusMessage.innerHTML = `Speaking... <div class="loading"></div>`;
-                            await SpeechModel.speak(translatedText, language);
+                            await SpeechModel.speak(textToSpeak, language);
                             
                             // 5. Done
                             statusMessage.textContent = "Done!";
@@ -495,6 +624,28 @@
                             statusMessage.textContent = "An error occurred. Please try again.";
                         }
                     }
+                });
+            });
+        }
+
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialLanguageModal = document.getElementById('initialLanguageModal');
+            const initialLanguageButtons = document.querySelectorAll('.initial-language-btn');
+            
+            // Show initial language selection modal
+            initialLanguageModal.style.display = 'flex';
+            
+            // Handle initial language selection
+            initialLanguageButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const selectedLanguage = this.getAttribute('data-lang');
+                    
+                    // Hide the initial modal
+                    initialLanguageModal.style.display = 'none';
+                    
+                    // Update UI with selected language
+                    updateUILanguage(selectedLanguage);
                 });
             });
         });
