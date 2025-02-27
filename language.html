@@ -538,7 +538,19 @@
             </div>
         </div>
     </section>
-
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h2><b>Connecting Rural India with Employment Opportunities</b></h2>
+                <p><b>SabKoKaam helps unskilled workers in rural areas find reliable jobs and secure their livelihoods through a simple, accessible platform.</b></p>
+                <div class="hero-btns">
+                    <a href="#" class="btn">Find Work</a>
+                    <a href="#" class="btn btn-secondary">Hire Workers</a>
+                    <button id="voiceBtn" class="btn">Play Voice</button> <!-- Add this button -->
+                </div>
+            </div>
+        </div>
+    </section>
     <section class="cta">
         <div class="container">
             <h2>Join SabKoKaam Today</h2>
@@ -623,6 +635,7 @@
                 whyChooseDescription: "हमारा मंच विशेष रूप से ग्रामीण क्षेत्रों के लिए डिज़ाइन किया गया है, जिससे नौकरी की तलाश सभी के लिए सरल हो जाती है।",
                 testimonialsTitle: "सफलता की कहानियां",
                 testimonialsDescription: "उन लोगों से सुनें जिनके जीवन को सबकोकाम के माध्यम से बदल दिया गया है।",
+                voiceText: "सबकोकाम ग्रामीण क्षेत्रों में अकुशल श्रमिकों को विश्वसनीय नौकरियां खोजने और एक सरल, सुलभ मंच के माध्यम से अपनी आजीविका सुरक्षित करने में मदद करता है।",
                 // Add more translations as needed
             },
             ta: {
@@ -647,27 +660,42 @@
                 whyChooseDescription: "ನಮ್ಮ ವೇದಿಕೆ ವಿಶೇಷವಾಗಿ ಗ್ರಾಮೀಣ ಪ್ರದೇಶಗಳಿಗಾಗಿ ವಿನ್ಯಾಸಗೊಳಿಸಲಾಗಿದೆ, ಎಲ್ಲರಿಗೂ ಉದ್ಯೋಗ ಹುಡುಕುವುದು ಸುಲಭವಾಗುತ್ತದೆ.",
                 testimonialsTitle: "ಯಶಸ್ಸಿನ ಕಥೆಗಳು",
                 testimonialsDescription: "ಸಬ್ಕೋಕಾಮ್ ಮೂಲಕ ಜೀವನವನ್ನು ಬದಲಾಯಿಸಿದ ಜನರಿಂದ ಕೇಳಿ.",
+                voiceText: "ಸಬ್ಕೋಕಾಮ್ ಗ್ರಾಮೀಣ ಪ್ರದೇಶಗಳಲ್ಲಿ ಅಪ್ರಶಿಕ್ಷಿತ ಕಾರ್ಮಿಕರಿಗೆ ನಂಬಬಹುದಾದ ಉದ್ಯೋಗಗಳನ್ನು ಹುಡುಕಲು ಮತ್ತು ಸರಳ, ಸುಲಭ ವೇದಿಕೆಯ ಮೂಲಕ ಅವರ ಜೀವನೋಪಾಯವನ್ನು ಸುರಕ್ಷಿತಗೊಳಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.",
                 // Add more translations as needed
             },
             // Add more languages here
         };
-    
-        function switchLanguage(lang) {
-            if (translations[lang]) {
-                document.title = translations[lang].title;
-                document.querySelector('.hero-content h2').textContent = translations[lang].heroTitle;
-                document.querySelector('.hero-content p').textContent = translations[lang].heroDescription;
-                document.querySelector('.hero-btns .btn').textContent = translations[lang].findWork;
-                document.querySelector('.hero-btns .btn-secondary').textContent = translations[lang].hireWorkers;
-                document.querySelector('#features .section-title h2').textContent = translations[lang].whyChoose;
-                document.querySelector('#features .section-title p').textContent = translations[lang].whyChooseDescription;
-                document.querySelector('#testimonials .section-title h2').textContent = translations[lang].testimonialsTitle;
-                document.querySelector('#testimonials .section-title p').textContent = translations[lang].testimonialsDescription;
-                // Add more elements to update as needed
-            } else {
-                console.error(`Language ${lang} not found in translations.`);
-            }
+        document.querySelectorAll('.footer-column a[data-lang]').forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const lang = event.target.getAttribute('data-lang');
+                switchLanguage(lang);
+            });
+        });
+ // Add this to your existing language switching function
+ function switchLanguage(lang) {
+    if (translations[lang]) {
+        document.title = translations[lang].title;
+        document.querySelector('.hero-content h2').textContent = translations[lang].heroTitle;
+        document.querySelector('.hero-content p').textContent = translations[lang].heroDescription;
+        document.querySelector('.hero-btns .btn').textContent = translations[lang].findWork;
+        document.querySelector('.hero-btns .btn-secondary').textContent = translations[lang].hireWorkers;
+        document.querySelector('#features .section-title h2').textContent = translations[lang].whyChoose;
+        document.querySelector('#features .section-title p').textContent = translations[lang].whyChooseDescription;
+        document.querySelector('#testimonials .section-title h2').textContent = translations[lang].testimonialsTitle;
+        document.querySelector('#testimonials .section-title p').textContent = translations[lang].testimonialsDescription;
+        
+        // Automatically speak when switching to Kannada or Hindi
+        if (lang === 'hi' || lang === 'kn') {
+            speak(translations[lang].voiceText, lang === 'hi' ? 'hi-IN' : 'kn-IN');
+            console.log('Auto-playing voice for ' + lang);
         }
+        
+        // Add more elements to update as needed
+    } else {
+        console.error(`Language ${lang} not found in translations.`);
+    }
+}
     
         document.querySelectorAll('.footer-column a[data-lang]').forEach(link => {
             link.addEventListener('click', (event) => {
@@ -676,6 +704,87 @@
                 switchLanguage(lang);
             });
         });
-    </script>
+        // Speech synthesis function
+// Speech synthesis function with better error handling and browser support
+function speak(text, lang) {
+    if ('speechSynthesis' in window) {
+      // Cancel any ongoing speech first
+      window.speechSynthesis.cancel();
+      
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = lang || 'kn-IN'; // Default to Kannada
+      utterance.rate = 0.9; // Slightly slower rate for better comprehension
+      utterance.onend = function() {
+        console.log('Speech finished');
+      };
+      utterance.onerror = function(event) {
+        console.error('Speech error occurred: ' + event.error);
+      };
+      
+      // Some browsers need a slight delay
+      setTimeout(() => {
+        window.speechSynthesis.speak(utterance);
+        console.log('Speaking now in ' + lang);
+      }, 100);
+    } else {
+      alert('Speech synthesis not supported in this browser. Please try using Chrome, Edge, or Safari.');
+    }
+  }
+  
+  // Add event listener to voice button
+  document.addEventListener('DOMContentLoaded', function() {
+    const voiceBtn = document.getElementById('voiceBtn');
+    if (voiceBtn) {
+      voiceBtn.addEventListener('click', function() {
+        // Use the Kannada text when button is clicked
+        speak(translations.kn.voiceText, 'kn-IN');
+        console.log('Voice button clicked');
+      });
+      console.log('Voice button listener added');
+    } else {
+      console.error('Voice button not found in the document');
+    }
+  });
+  
+  // Make sure the Kannada text is properly defined
+  if (!translations.kn.voiceText) {
+    translations.kn.voiceText = `ಸಬ್ಕೋಕಾಮ್ ಒಂದು ಗ್ರಾಮೀಣ ಉದ್ಯೋಗ ವೇದಿಕೆಯಾಗಿದೆ. ಈ ತಂತ್ರಜ್ಞಾನವು ಗ್ರಾಮೀಣ ಪ್ರದೇಶಗಳಲ್ಲಿ ಅಕುಶಲ ಕಾರ್ಮಿಕರು ಮತ್ತು ಉದ್ಯೋಗದಾತರನ್ನು ಸಂಪರ್ಕಿಸುತ್ತದೆ. ನಮ್ಮ ಅಪ್ಲಿಕೇಶನ್ ಮೂಲಕ, ಕಾರ್ಮಿಕರು ಸುಲಭವಾಗಿ ನೋಂದಾಯಿಸಿಕೊಂಡು, ಸ್ಥಳೀಯ ಉದ್ಯೋಗಗಳನ್ನು ಹುಡುಕಬಹುದು, ಮತ್ತು ಕೆಲಸದ ಅವಕಾಶಗಳನ್ನು ಪಡೆಯಬಹುದು. ನಾವು ಬಹುಭಾಷಾ ಬೆಂಬಲ, ಧ್ವನಿ ವೈಶಿಷ್ಟ್ಯಗಳು ಮತ್ತು ಸರ್ವಂ ಎಐ ತಂತ್ರಜ್ಞಾನವನ್ನು ಬಳಸಿ ಭಾಷಾ ತಡೆಗಳನ್ನು ನಿವಾರಿಸುತ್ತೇವೆ.`;
+  }
+  
+  // Add event listener to voice button
+  document.getElementById('voiceBtn').addEventListener('click', () => {
+    if (currentLang === 'hi' || currentLang === 'kn') {
+        speak(currentVoiceText, currentLang === 'hi' ? 'hi-IN' : 'kn-IN');
+    } else {
+        alert('Voice support is only available for Hindi and Kannada.');
+    }
+});
+  
+  // Add this comprehensive Kannada description to your translations
+  translations.kn.voiceText = `ಸಬ್ಕೋಕಾಮ್ ಒಂದು ಗ್ರಾಮೀಣ ಉದ್ಯೋಗ ವೇದಿಕೆಯಾಗಿದೆ. ಈ ತಂತ್ರಜ್ಞಾನವು ಗ್ರಾಮೀಣ ಪ್ರದೇಶಗಳಲ್ಲಿ ಅಕುಶಲ ಕಾರ್ಮಿಕರು ಮತ್ತು ಉದ್ಯೋಗದಾತರನ್ನು ಸಂಪರ್ಕಿಸುತ್ತದೆ. ನಮ್ಮ ಅಪ್ಲಿಕೇಶನ್ ಮೂಲಕ, ಕಾರ್ಮಿಕರು ಸುಲಭವಾಗಿ ನೋಂದಾಯಿಸಿಕೊಂಡು, ಸ್ಥಳೀಯ ಉದ್ಯೋಗಗಳನ್ನು ಹುಡುಕಬಹುದು, ಮತ್ತು ಕೆಲಸದ ಅವಕಾಶಗಳನ್ನು ಪಡೆಯಬಹುದು. ನಾವು ಬಹುಭಾಷಾ ಬೆಂಬಲ, ಧ್ವನಿ ವೈಶಿಷ್ಟ್ಯಗಳು ಮತ್ತು ಸರ್ವಂ ಎಐ ತಂತ್ರಜ್ಞಾನವನ್ನು ಬಳಸಿ ಭಾಷಾ ತಡೆಗಳನ್ನು ನಿವಾರಿಸುತ್ತೇವೆ. ಇದು ಬರಹ ಕಲಿಯದ ಜನರಿಗೂ ಸಹ ಸುಲಭವಾಗಿ ಬಳಸಬಹುದಾದ ವ್ಯವಸ್ಥೆ. ನಮ್ಮ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್‌ನಲ್ಲಿ ನಾಲ್ಕು ಸರಳ ಹಂತಗಳಿವೆ: ನೋಂದಣಿ, ಕೆಲಸ ಹುಡುಕುವುದು, ನೇಮಕಾತಿ ಮತ್ತು ಪಾವತಿ ಪಡೆಯುವುದು. ಈ ತಂತ್ರಜ್ಞಾನವು ಗ್ರಾಮೀಣ ಪ್ರದೇಶಗಳಲ್ಲಿ ಜನರ ಜೀವನವನ್ನು ಸುಧಾರಿಸಲು ಮತ್ತು ಉದ್ಯೋಗ ಸೃಷ್ಟಿಸಲು ಸಹಾಯ ಮಾಡುತ್ತದೆ.`;
+  function switchLanguage(lang) {
+    if (translations[lang]) {
+        document.title = translations[lang].title;
+        document.querySelector('.hero-content h2').textContent = translations[lang].heroTitle;
+        document.querySelector('.hero-content p').textContent = translations[lang].heroDescription;
+        document.querySelector('.hero-btns .btn').textContent = translations[lang].findWork;
+        document.querySelector('.hero-btns .btn-secondary').textContent = translations[lang].hireWorkers;
+        document.querySelector('#features .section-title h2').textContent = translations[lang].whyChoose;
+        document.querySelector('#features .section-title p').textContent = translations[lang].whyChooseDescription;
+        document.querySelector('#testimonials .section-title h2').textContent = translations[lang].testimonialsTitle;
+        document.querySelector('#testimonials .section-title p').textContent = translations[lang].testimonialsDescription;
+        
+        // Automatically speak when switching to Kannada or Hindi
+        if (lang === 'hi' || lang === 'kn') {
+            speak(translations[lang].voiceText, lang === 'hi' ? 'hi-IN' : 'kn-IN');
+            console.log('Auto-playing voice for ' + lang);
+        }
+        
+        // Add more elements to update as needed
+    } else {
+        console.error(`Language ${lang} not found in translations.`);
+    }
+} 
+</script>
 </body>
 </html>
