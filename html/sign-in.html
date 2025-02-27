@@ -413,20 +413,20 @@
                 <div class="form-step active" id="step1">
                     <div class="form-group">
                         <label for="fullname">Full Name <span style="color: red">*</span></label>
-                        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+                        <input type="text" id="fullname" name="fullname" placeholder="Enter your full name"  >
                     </div>
                     
                     <!-- Date of Birth field added here -->
                     <div class="form-group">
                         <label for="dob">Date of Birth <span style="color: red">*</span></label>
-                        <input type="date" id="dob" name="dob" required>
+                        <input type="date" id="dob" name="dob"  >
                         <div class="helper-text">You must be at least 18 years old to register</div>
                     </div>
                     
                     <div class="input-row">
                         <div class="form-group">
                             <label for="contact">Contact Number <span style="color: red">*</span></label>
-                            <input type="tel" id="contact" name="contact" placeholder="Enter your mobile number" required>
+                            <input type="tel" id="contact" name="contact" placeholder="Enter your mobile number"  >
                             <div class="helper-text">We'll send verification code to this number</div>
                         </div>
                         
@@ -438,13 +438,13 @@
                     
                     <div class="form-group">
                         <label for="email">Email Address <span style="color: red">*</span></label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                        <input type="email" id="email" name="email" placeholder="Enter your email address"  >
                         <div class="helper-text">You'll use this email to login to your account</div>
                     </div>
                     
                     <div class="form-group">
                         <label for="aadhar">Aadhar Number <span style="color: red">*</span></label>
-                        <input type="text" id="aadhar" name="aadhar" placeholder="Enter your 12-digit Aadhar number" required maxlength="12">
+                        <input type="text" id="aadhar" name="aadhar" placeholder="Enter your 12-digit Aadhar number"   maxlength="12">
                         <div class="helper-text">This helps verify your identity and build trust with employers</div>
                     </div>
                     
@@ -468,7 +468,7 @@
                                     </div>
                                     <p>Click to upload Aadhar card</p>
                                     <small>(front side with photo clearly visible)</small>
-                                    <input type="file" id="aadhar-file" accept="image/*" required>
+                                    <input type="file" id="aadhar-file" accept="image/*"  >
                                     <div class="file-preview" id="aadhar-preview">
                                         <img id="aadhar-image" src="" alt="Aadhar preview">
                                     </div>
@@ -494,7 +494,7 @@
                                     </svg>
                                     Take Selfie
                                 </button>
-                                <input type="hidden" id="selfie-data" name="selfie-data" required>
+                                <input type="hidden" id="selfie-data" name="selfie-data"  >
                             </div>
                         </div>
                     </div>
@@ -502,7 +502,7 @@
                     <div class="input-row">
                         <div class="form-group">
                             <label for="country">Country <span style="color: red">*</span></label>
-                            <select id="country" name="country" required>
+                            <select id="country" name="country"  >
                                 <option value="" disabled selected>Select your country</option>
                                 <option value="india">India</option>
                             </select>
@@ -510,7 +510,7 @@
                         
                         <div class="form-group">
                             <label for="state">State <span style="color: red">*</span></label>
-                            <select id="state" name="state" required>
+                            <select id="state" name="state"  >
                                 <option value="" disabled selected>Select your state</option>
                                 <option value="andhra-pradesh">Andhra Pradesh</option>
                                 <option value="bihar">Bihar</option>
@@ -530,7 +530,7 @@
                     
                     <div class="form-group">
                         <label for="city">City/Village <span style="color: red">*</span></label>
-                        <input type="text" id="city" name="city" placeholder="Enter your city or village name" required>
+                        <input type="text" id="city" name="city" placeholder="Enter your city or village name"  >
                     </div>
                     
                     <div class="form-footer">
@@ -549,7 +549,7 @@
                     
                     <div class="form-group">
                         <label for="password">Set Password <span style="color: red">*</span></label>
-                        <input type="password" id="password" name="password" placeholder="Create a strong password" required>
+                        <input type="password" id="password" name="password" placeholder="Create a strong password"  >
                         <div class="password-strength">
                             Password Strength: <span id="strength-text">Not entered</span>
                             <div class="strength-meter">
@@ -560,7 +560,7 @@
                     
                     <div class="form-group">
                         <label for="confirm-password">Re-enter Password <span style="color: red">*</span></label>
-                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                        <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password"  >
                     </div>
                     
                     <div class="password-tips">
@@ -748,22 +748,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 break;
         }
     });
-    
-    // Move to step 2
-    nextBtn.addEventListener('click', function() {
-        // Simple validation for step 1
-        const requiredFields = step1.querySelectorAll('[required]');
-        let isValid = true;
-        
-        requiredFields.forEach(field => {
-            if (!field.value.trim()) {
-                field.style.borderColor = 'red';
-                isValid = false;
-            } else {
-                field.style.borderColor = '';
-            }
-        });
-        
         // Check DOB for age verification
         if (dobInput.value) {
             const dobDate = new Date(dobInput.value);
@@ -806,7 +790,7 @@ document.addEventListener('DOMContentLoaded', function() {
             step1Indicator.classList.remove('active');
             step2Indicator.classList.add('active');
         } else {
-            errorMessage.textContent = "Please fill in all required fields correctly.";
+            errorMessage.textContent = "Please fill in all   fields correctly.";
             errorMessage.style.display = 'block';
             
             // Hide error message after 3 seconds
