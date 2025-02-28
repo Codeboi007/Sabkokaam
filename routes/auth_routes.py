@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify, redirect, url_for, render_template, flash
+from flask import Blueprint, request, redirect, url_for, render_template, flash,session
 from flask_login import login_user, logout_user, login_required,current_user
 from database import db, Users,UserCategory
 import logging
@@ -91,7 +91,6 @@ def category_selection():
 
 # Logout Route
 @auth_bp.route('/logout')
-@login_required
 def user_logout():
     logout_user()
     flash('You have been logged out.', 'success')
@@ -105,8 +104,13 @@ def option_page():
 
 
 @auth_bp.route('/profile')
-@login_required
+
 def profile_page():
     user = Users.query.get(current_user.id)
-    return render_template('profile-page.html', user=user)
+    return render_template('profile-page.html')
+
+@auth_bp.route('/aboutus')
+
+def aboutus():
+    return render_template('aboutus.html')
 

@@ -8,6 +8,7 @@ from routes.user_routes import user_bp
 from routes.application_routes import application_bp
 from routes.face_routes import face_bp
 from elasticsearch import Elasticsearch
+from datetime import timedelta
 import os
 import logging
 
@@ -20,6 +21,7 @@ app.config['SECRET_KEY'] = SECRET_KEY
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['ALLOWED_EXTENSIONS'] = ALLOWED_EXTENSIONS
 app.config['MAX_CONTENT_LENGTH'] = 160 * 1024 * 1024 
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 
 db.init_app(app)
 login_manager = LoginManager(app)
@@ -31,6 +33,8 @@ es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200
 face_recognition_model_path = "api_models/dlib_face_recognition_resnet_model_v1.dat"
 face_landmarks_model_path = "api_models/shape_predictor_68_face_landmarks.dat"
 face_encoding_model_path = "api_models/mmod_human_face_detector.dat"
+
+
 
 with app.app_context():
     db.create_all()

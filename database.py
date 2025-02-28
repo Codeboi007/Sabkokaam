@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from flask_login import UserMixin
+import json
 from werkzeug.security import generate_password_hash, check_password_hash
 
 db = SQLAlchemy()
@@ -44,9 +45,12 @@ class Job(db.Model):
     employer_email = db.Column(db.String(100), nullable=False)
     employer_contact = db.Column(db.String(20), nullable=False)
     job_categories = db.Column(db.Text, nullable=False)  # Store categories as JSON string
+    address = db.Column(db.String(255), nullable=True)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    def __init__(self, job_name, job_description, people_needed, working_hours, earnings, job_image, employer_name, employer_email, employer_contact, job_categories):
+    def __init__(self, job_name, job_description, people_needed, working_hours, earnings, job_image, employer_name, employer_email, employer_contact, job_categories, address, latitude=None, longitude=None):
         self.job_name = job_name
         self.job_description = job_description
         self.people_needed = people_needed
@@ -56,8 +60,31 @@ class Job(db.Model):
         self.employer_name = employer_name
         self.employer_email = employer_email
         self.employer_contact = employer_contact
-        self.job_categories = job_categories
+        self.job_categories = json.dumps(job_categories)  # Store as JSON string
+        self.address = address
+        self.latitude = latitude
+        self.longitude = longitude
         self.created_at = datetime.utcnow()
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'job_name': self.job_name,
+            'job_description': self.job_description,
+            'people_needed': self.people_needed,
+            'working_hours': self.working_hours,
+            'earnings': self.earnings,
+            'job_image': self.job_image,
+            'employer_name': self.employer_name,
+            'employer_email': self.employer_email,
+            'employer_contact': self.employer_contact,
+            'job_categories': json.loads(self.job_categories),  # Parse JSON string
+            'address': self.address,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
+            'created_at': self.created_at
+        }
+
 
 class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)

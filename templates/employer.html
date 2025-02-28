@@ -354,14 +354,14 @@
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    <img src="/api/placeholder/150/50" alt="SabKoKaam Logo">
+                    <a href="{{url_for('home')}}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo"></a>
                     <h1>SabKoKaam</h1>
                 </div>
                 <ul class="nav-links">
                     <li><a href="#features">Features</a></li>
                     <li><a href="#how-it-works">How It Works</a></li>
                     <li><a href="#testimonials">Success Stories</a></li>
-                    <li><a href="#contact-support">contact support</a></li>
+                    <li><a href="#contact-support">Contact Support</a></li>
                     <li><a href="#" class="btn">Download App</a></li>
                 </ul>
             </nav>
@@ -372,33 +372,31 @@
         <div class="container">
             <div class="profile-card">
                 <div class="profile-header">
-                    <img src="/api/placeholder/400/400" alt="Worker Profile" class="profile-img">
+                    <img src="{{ url_for('static', filename='images/shreyas.jpg') }}" alt="Worker Profile" class="profile-img">
                     <div class="profile-info">
-                        <h2 class="profile-name">Rajesh Patel</h2>
-                        <p class="profile-role">Skilled Construction Worker</p>
+                        <h2 class="profile-name">{{ worker.full_name }}</h2>
+                        <p class="profile-role">{{ worker.role or 'Skilled Worker' }}</p>
                         <div class="profile-details">
                             <span>📍</span>
-                            <p>Ahmedabad, Gujarat</p>
+                            <p>{{ worker.city }}, {{ worker.state }}</p>
                         </div>
                         <div class="profile-details">
                             <span>💼</span>
-                            <p>7 years experience</p>
+                            <p>{{ worker.experience or 'Experience not specified' }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="profile-body">
                     <div class="profile-bio">
-                        <p>Hard-working construction professional with experience in residential and commercial projects. Reliable team player with excellent skills in masonry, flooring, and painting. Available for both short-term and long-term projects within 50km of Ahmedabad.</p>
+                        <p>{{ worker.bio or 'No bio available.' }}</p>
                     </div>
                     
                     <div class="skills-section">
                         <h3 class="skills-title">Skills</h3>
                         <div class="skills">
-                            <span class="skill-tag">Masonry</span>
-                            <span class="skill-tag">Flooring</span>
-                            <span class="skill-tag">Painting</span>
-                            <span class="skill-tag">Plastering</span>
-                            <span class="skill-tag">Basic Carpentry</span>
+                            {% for skill in worker.skills %}
+                                <span class="skill-tag">{{ skill }}</span>
+                            {% endfor %}
                         </div>
                     </div>
                     
@@ -407,21 +405,21 @@
                     <div class="contact-info" id="contactInfo">
                         <div class="contact-item">
                             <div class="contact-icon">📱</div>
-                            <div class="contact-text">+91 98765 43210</div>
+                            <div class="contact-text">{{ worker.contact_number }}</div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">💬</div>
                             <div class="contact-text">
-                                <a href="https://wa.me/919876543210">WhatsApp: +91 98765 43210</a>
+                                <a href="https://wa.me/{{ worker.contact_number }}">WhatsApp: {{ worker.contact_number }}</a>
                             </div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">📅</div>
-                            <div class="contact-text">Available: Monday to Saturday</div>
+                            <div class="contact-text">Available: {{ worker.availability or 'Availability not specified' }}</div>
                         </div>
                         <div class="contact-item">
                             <div class="contact-icon">💰</div>
-                            <div class="contact-text">Day Rate: ₹650 - ₹800</div>
+                            <div class="contact-text">Day Rate: {{ worker.day_rate or 'Rate not specified' }}</div>
                         </div>
                     </div>
                 </div>

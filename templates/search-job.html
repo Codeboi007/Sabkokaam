@@ -112,6 +112,7 @@
             max-width: 700px;
             margin: 0 auto;
             display: flex;
+            margin-top: 100px;
         }
         
         .search-bar input {
@@ -328,7 +329,7 @@
         <div class="container">
             <nav class="navbar">
                 <div class="logo">
-                    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo">
+                    <a href="{{url_for('home')}}"><img src="{{ url_for('static', filename='images/logo.png') }}" alt="SabKoKaam Logo"></a>
                     <h1>SabKoKaam</h1>
                 </div>
                 <ul class="nav-links">
@@ -407,7 +408,7 @@
     <script>
 
 function fetchUserCategoryJobs() {
-    fetch('/user-category-jobs')
+    fetch('/search-jobs')
         .then(response => response.json())
         .then(data => {
             if (data.success) {

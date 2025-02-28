@@ -1,12 +1,12 @@
-from contextlib import redirect_stderr
 from flask import Blueprint, request, jsonify, redirect, url_for, render_template, flash
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 import os
-from database import db, Job,UserCategory,Application
+from database import db, Job, UserCategory, Application,Users
 from flask import current_app as app
 import logging
 from elasticsearch import Elasticsearch
+import json, requests
 
 # Configure logging
 logging.basicConfig(level=logging.DEBUG)
@@ -14,15 +14,12 @@ logging.basicConfig(level=logging.DEBUG)
 job_bp = Blueprint('job', __name__)
 es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200')])  # Initialize Elasticsearch here
 
-
 # Job Posting Page Route
 @job_bp.route('/post-job', methods=['GET'])
-@login_required
 def post_job():
     return render_template('post-job.html')  # Render the job posting page
 
 @job_bp.route('/post-job', methods=['POST'])
-@login_required
 def create_job():
     try:
         # Extract form data
@@ -32,6 +29,19 @@ def create_job():
         working_hours = request.form['working-hours']
         earnings = request.form['earnings']
         job_categories = request.form['job-categories']
+        address = request.form['address']
+
+        # Use Google Maps Geocoding API to get coordinates
+        geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=YOUR_API_KEY"
+        response = requests.get(geocode_url)
+        geocode_data = response.json()
+
+        if geocode_data['status'] == 'OK':
+            latitude = geocode_data['results'][0]['geometry']['location']['lat']
+            longitude = geocode_data['results'][0]['geometry']['location']['lng']
+        else:
+            latitude = None
+            longitude = None
 
         # Save uploaded job image
         job_image = request.files['job-image']
@@ -49,50 +59,52 @@ def create_job():
             working_hours=working_hours,
             earnings=earnings,
             job_image=job_image_path,
-            employer_name=current_user.full_name , # Store the employer's name
+            employer_name=current_user.full_name,  # Store the employer's name
             employer_email=current_user.email,  # Store the employer's email
             employer_contact=current_user.contact_number,
-            job_categories=job_categories
-            
+            job_categories=job_categories,
+            address=address,
+            latitude=latitude,
+            longitude=longitude
         )
         db.session.add(new_job)
         db.session.commit()
 
         # Index the job in Elasticsearch
-        es.index(index='jobs', id=new_job.id, body={
-            'job_name': job_name,
-            'job_description': job_description,
-            'people_needed': people_needed,
-            'working_hours': working_hours,
-            'earnings': earnings,
-            'employer_name': current_user.full_name,
-            'employer_email': current_user.email,
-            'employer_contact': current_user.contact_number,
-            'job_categories': job_categories,
-            'created_at': new_job.created_at
-        })
+        es.index(index='jobs', id=new_job.id, body=new_job.serialize())
 
         # Redirect to a success page or job listing page
-        return redirect(url_for('job.post_job'))
+        return redirect(url_for('job.search_job_page'))
     except Exception as e:
         logging.error(f"Error during job posting: {e}")
         return jsonify({'success': False, 'error': 'An error occurred during job posting'}), 500
 
 @job_bp.route('/search-job', methods=['GET'])
-@login_required
 def search_job_page():
-    return render_template('search-job.html') 
+    return render_template('search-job.html')
 
-
-# Job Search Route
 @job_bp.route('/search-jobs', methods=['GET'])
-@login_required
 def search_jobs():
     query = request.args.get('q')
-    if not query:
-        return jsonify({'success': False, 'error': 'No search query provided'}), 400
+
 
     try:
+        # Fetch user's categories
+        user_categories = UserCategory.query.filter_by(user_id=current_user.id).all()
+        categories = [uc.category.lower() for uc in user_categories]
+
+        # Fetch jobs that match user's categories (case-insensitive)
+        category_jobs = Job.query.all()
+        matching_jobs = []
+        for job in category_jobs:
+            job_categories = json.loads(job.job_categories)
+            if any(category.lower() in categories for category in job_categories):
+                matching_jobs.append(job.serialize())
+
+        if not query:
+            return jsonify({'success': True, 'jobs': matching_jobs})
+
+        # Apply search query
         search_results = es.search(index='jobs', body={
             'query': {
                 'multi_match': {
@@ -102,17 +114,21 @@ def search_jobs():
             }
         })
 
-        jobs = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
-        return jsonify({'success': True, 'jobs': jobs})
+        search_jobs = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
+        
+        # Combine category jobs and search jobs, ensuring no duplicates
+        combined_jobs = {job['id']: job for job in matching_jobs + search_jobs}.values()
+
+        return jsonify({'success': True, 'jobs': list(combined_jobs)})
     except Exception as e:
         logging.error(f"Error during job search: {e}")
         return jsonify({'success': False, 'error': 'An error occurred during job search'}), 500
-    
 
+@job_bp.route('/map', methods=['GET'])
+def map_page():
+    return render_template('map.html')
 
-    # Placeholder route for job application
 @job_bp.route('/apply/<int:job_id>', methods=['GET', 'POST'])
-@login_required
 def apply_job(job_id):
     job = Job.query.get_or_404(job_id)
     
@@ -143,7 +159,6 @@ def apply_job(job_id):
     return render_template('apply-job.html', job=job)
 
 @job_bp.route('/user-category-jobs', methods=['GET'])
-@login_required
 def user_category_jobs():
     try:
         # Fetch user's categories
@@ -160,3 +175,15 @@ def user_category_jobs():
     except Exception as e:
         logging.error(f"Error fetching user category jobs: {e}")
         return jsonify({'success': False, 'error': 'An error occurred while fetching jobs'}), 500
+    
+
+
+@job_bp.route('/employer/<int:worker_id>', methods=['GET'])
+
+def view_worker(worker_id):
+    worker = Users.query.get(worker_id)
+    if not worker:
+        flash('Worker not found', 'error')
+        return redirect(url_for('job.search_job_page'))
+    
+    return render_template('employer.html', worker=worker)

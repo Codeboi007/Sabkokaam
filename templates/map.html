@@ -245,10 +245,10 @@
             }
         }
     </style>
-</head>
+</head>4
 <body>
     <header>
-        <div class="logo">Kaam<span>Finder</span></div>
+        <div class="logo">SabKo<span>Kaam</span></div>
     </header>
     
     <div class="container">
@@ -268,6 +268,7 @@
         </div>
         
         <div class="map-container">
+            <!-- Direct iframe implementation as requested -->
             <iframe id="google-map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111136.42559774431!2d74.4260381535804!3d15.866862647587144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf669f5095362f%3A0x7e34b31edcdefb5f!2sBelagavi%2C%20Karnataka!5e1!3m2!1sen!2sin!4v1740158680498!5m2!1sen!2sin" 
                 width="100%" height="100%" style="border:0;" 
                 allowfullscreen="" loading="lazy" 
@@ -275,12 +276,14 @@
         </div>
         
         <div class="job-listings" id="job-listings">
+            <!-- Job listings will be populated dynamically -->
         </div>
     </div>
     
     <div class="add-job-btn" id="add-job-btn">+</div>
 
     <script>
+        // Sample job data
         const jobsData = [
             {
                 id: 1,
@@ -332,6 +335,7 @@
             }
         ];
 
+        // Simulated location suggestions
         const popularPlaces = [
             "Belagavi City Center",
             "Tilakwadi, Belagavi",
@@ -343,39 +347,49 @@
             "Kangrali, Karnataka"
         ];
 
+        // Show route function - Redirects to Google Maps with directions
         function showRoute(jobId) {
             const job = jobsData.find(j => j.id === jobId);
             if (!job) return;
             
+            // Get current location or use a fallback
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(
                     (position) => {
                         const userLocation = `${position.coords.latitude},${position.coords.longitude}`;
                         const destinationLocation = job.location.replaceAll(' ', '+');
                         
+                        // Open Google Maps in a new tab with directions
                         window.open(`https://www.google.com/maps/dir/${userLocation}/${destinationLocation},+Belagavi,+Karnataka,+India/`, '_blank');
                     },
                     () => {
+                        // Fallback if user denies location access
                         const destinationLocation = job.location.replaceAll(' ', '+');
                         window.open(`https://www.google.com/maps/dir//${destinationLocation},+Belagavi,+Karnataka,+India/`, '_blank');
                     }
                 );
             } else {
+                // Fallback for browsers that don't support geolocation
                 const destinationLocation = job.location.replaceAll(' ', '+');
                 window.open(`https://www.google.com/maps/dir//${destinationLocation},+Belagavi,+Karnataka,+India/`, '_blank');
             }
         }
 
+        // Filter jobs by type
         function filterJobs(type) {
+            // Highlight active filter button
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.classList.remove('active');
             });
             document.querySelector(`.filter-btn[data-type="${type}"]`).classList.add('active');
             
+            // Filter job listings
             renderJobListings(type);
             
+            // Update map markers (we're using iframe so just update the visible job listings)
         }
 
+        // Render job listings
         function renderJobListings(filterType = 'all') {
             const container = document.getElementById('job-listings');
             container.innerHTML = '';
@@ -416,14 +430,17 @@
             });
         }
 
+        // Contact employer function
         function contactEmployer(phone) {
             window.location.href = `tel:${phone}`;
         }
 
+        // Mock function for adding a new job
         function showAddJobForm() {
             alert("Add Job functionality would be implemented here.\n\nEmployers would be able to add new job listings with location, wage, and requirements.");
         }
 
+        // Setup location search with suggestions
         function setupLocationSuggestions() {
             const input = document.getElementById('location-input');
             const suggestionsContainer = document.getElementById('location-suggestions');
@@ -435,6 +452,7 @@
                     return;
                 }
                 
+                // Filter suggestions based on input
                 const filtered = popularPlaces.filter(place => 
                     place.toLowerCase().includes(value)
                 );
@@ -449,6 +467,7 @@
                             input.value = place;
                             suggestionsContainer.style.display = 'none';
                             
+                            // Update iframe to focus on this location
                             const locationQuery = place.replaceAll(' ', '+');
                             const mapIframe = document.getElementById('google-map');
                             mapIframe.src = `https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d111136.42559774431!2d74.4260381535804!3d15.866862647587144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bbf669f5095362f%3A0x7e34b31edcdefb5f!2s${locationQuery}!5e1!3m2!1sen!2sin!4v1740158680498!5m2!1sen!2sin`;
@@ -461,6 +480,7 @@
                 }
             });
             
+            // Hide suggestions when clicking outside
             document.addEventListener('click', function(e) {
                 if (e.target !== input && !suggestionsContainer.contains(e.target)) {
                     suggestionsContainer.style.display = 'none';
@@ -468,17 +488,22 @@
             });
         }
 
+        // Initialize everything when the page loads
         document.addEventListener('DOMContentLoaded', function() {
+            // Render initial job listings
             renderJobListings();
             
+            // Setup filter buttons
             document.querySelectorAll('.filter-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     filterJobs(btn.getAttribute('data-type'));
                 });
             });
             
+            // Setup add job button
             document.getElementById('add-job-btn').addEventListener('click', showAddJobForm);
             
+            // Setup location suggestions
             setupLocationSuggestions();
         });
     </script>
