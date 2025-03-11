@@ -51,4 +51,4 @@ app.register_blueprint(application_bp, url_prefix='/application')
 
 if __name__ == '__main__':
     print("Starting the application...")
-    app.run(host='127.0.0.1', port=8000, debug=True)
+    app.run()
