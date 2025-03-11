@@ -6,7 +6,6 @@ from routes.auth_routes import auth_bp
 from routes.job_routes import job_bp
 from routes.user_routes import user_bp
 from routes.application_routes import application_bp
-from routes.face_routes import face_bp
 from elasticsearch import Elasticsearch
 from datetime import timedelta
 import os
@@ -49,7 +48,6 @@ app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(job_bp, url_prefix='/job')
 app.register_blueprint(user_bp, url_prefix='/user')
 app.register_blueprint(application_bp, url_prefix='/application')
-app.register_blueprint(face_bp, url_prefix='/face')
 
 if __name__ == '__main__':
     print("Starting the application...")
