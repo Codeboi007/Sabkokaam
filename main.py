@@ -27,7 +27,7 @@ db.init_app(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'auth.user_login'
 
-es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200')])  # Initialize Elasticsearch here
+es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST')])  # Initialize Elasticsearch here
 
 # Load face recognition models (paths should be correctly set)
 face_recognition_model_path = "api_models/dlib_face_recognition_resnet_model_v1.dat"

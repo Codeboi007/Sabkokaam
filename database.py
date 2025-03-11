@@ -14,8 +14,6 @@ class Users(db.Model, UserMixin):
     alternate_contact = db.Column(db.String(15))
     email = db.Column(db.String(120), unique=True, nullable=False)
     aadhar_number = db.Column(db.String(20), nullable=False)
-    aadhar_photo = db.Column(db.String(255))  # Path to Aadhar card photo
-    selfie_photo = db.Column(db.String(255))  # Path to selfie photo
     password = db.Column(db.String(255), nullable=False)
     is_verified = db.Column(db.Boolean, default=False)  # Identity verification status
     country = db.Column(db.String(50), nullable=False)
