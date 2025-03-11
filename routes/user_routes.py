@@ -1,4 +1,4 @@
-# routes/user_routes.py
+
 from flask import Blueprint, render_template, flash, redirect, url_for
 from flask_login import current_user, login_required
 from database import Application, Job  

@@ -1,27 +1,27 @@
-from flask import Blueprint, request, redirect, url_for, render_template, flash,session
+from flask import Blueprint, request, redirect, url_for, render_template, flash
 from flask_login import login_user, logout_user, login_required,current_user
 from database import db, Users,UserCategory
 import logging
 
-# Configure logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 auth_bp = Blueprint('auth', __name__)
 
-# Registration Route (Handles both GET and POST)
+
 @auth_bp.route('/reg', methods=['GET', 'POST'])
 def user_reg():
     if request.method == 'GET':
-        # Render the registration page for GET requests
+        
         return render_template('reg.html')
 
     elif request.method == 'POST':
         try:
-            # Extract form data
+            
             full_name = request.form['fullname']
             contact_number = request.form['contact']
             dob=request.form['dob']
-            alternate_contact = request.form.get('alternate-contact')  # Use .get() instead of []
+            alternate_contact = request.form.get('alternate-contact')  
             email = request.form['email']
             password = request.form['password']
             aadhar_number = request.form['aadhar']
@@ -47,7 +47,6 @@ def user_reg():
             db.session.add(new_user)
             db.session.commit()
 
-            # Flash success message and redirect to login page
             flash('Account created successfully! Please log in.', 'success')
             return redirect(url_for('auth.user_login'))
 
@@ -67,7 +66,7 @@ def user_login():
             login_user(user)
             flash('Login successful!', 'success')
             
-            # Redirect to category selection page if categories are not already selected
+
             user_categories = UserCategory.query.filter_by(user_id=user.id).all()
             if not user_categories:
                 return redirect(url_for('auth.category_selection'))
@@ -89,7 +88,6 @@ def category_selection():
         return redirect(url_for('auth.option_page'))
     return render_template('category.html')
 
-# Logout Route
 @auth_bp.route('/logout')
 def user_logout():
     logout_user()
@@ -99,7 +97,7 @@ def user_logout():
 
 @auth_bp.route('/option', methods=['GET','POST'])
 def option_page():
-    # You can pass dynamic data to the template here if needed
+    
     return render_template('option.html')
 
 

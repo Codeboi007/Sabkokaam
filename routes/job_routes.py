@@ -8,21 +8,20 @@ import logging
 from elasticsearch import Elasticsearch
 import json, requests
 
-# Configure logging
+
 logging.basicConfig(level=logging.DEBUG)
 
 job_bp = Blueprint('job', __name__)
-es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200')])  # Initialize Elasticsearch here
+es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST')]) 
 
-# Job Posting Page Route
+
 @job_bp.route('/post-job', methods=['GET'])
 def post_job():
-    return render_template('post-job.html')  # Render the job posting page
+    return render_template('post-job.html')  
 
 @job_bp.route('/post-job', methods=['POST'])
 def create_job():
     try:
-        # Extract form data
         job_name = request.form['job-name']
         job_description = request.form['job-description']
         people_needed = request.form['people-needed']
@@ -31,7 +30,6 @@ def create_job():
         job_categories = request.form['job-categories']
         address = request.form['address']
 
-        # Use Google Maps Geocoding API to get coordinates
         geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={address}&key=YOUR_API_KEY"
         response = requests.get(geocode_url)
         geocode_data = response.json()
@@ -59,8 +57,8 @@ def create_job():
             working_hours=working_hours,
             earnings=earnings,
             job_image=job_image_path,
-            employer_name=current_user.full_name,  # Store the employer's name
-            employer_email=current_user.email,  # Store the employer's email
+            employer_name=current_user.full_name, 
+            employer_email=current_user.email, 
             employer_contact=current_user.contact_number,
             job_categories=job_categories,
             address=address,
@@ -73,7 +71,6 @@ def create_job():
         # Index the job in Elasticsearch
         es.index(index='jobs', id=new_job.id, body=new_job.serialize())
 
-        # Redirect to a success page or job listing page
         return redirect(url_for('job.search_job_page'))
     except Exception as e:
         logging.error(f"Error during job posting: {e}")
@@ -89,11 +86,11 @@ def search_jobs():
 
 
     try:
-        # Fetch user's categories
+    
         user_categories = UserCategory.query.filter_by(user_id=current_user.id).all()
         categories = [uc.category.lower() for uc in user_categories]
 
-        # Fetch jobs that match user's categories (case-insensitive)
+        
         category_jobs = Job.query.all()
         matching_jobs = []
         for job in category_jobs:
@@ -104,7 +101,7 @@ def search_jobs():
         if not query:
             return jsonify({'success': True, 'jobs': matching_jobs})
 
-        # Apply search query
+
         search_results = es.search(index='jobs', body={
             'query': {
                 'multi_match': {
@@ -116,7 +113,7 @@ def search_jobs():
 
         search_jobs = [{'id': hit['_id'], **hit['_source']} for hit in search_results['hits']['hits']]
         
-        # Combine category jobs and search jobs, ensuring no duplicates
+    
         combined_jobs = {job['id']: job for job in matching_jobs + search_jobs}.values()
 
         return jsonify({'success': True, 'jobs': list(combined_jobs)})
@@ -134,13 +131,12 @@ def apply_job(job_id):
     
     if request.method == 'POST':
         try:
-            # Check if the user has already applied for the job
+
             existing_application = Application.query.filter_by(job_id=job_id, worker_id=current_user.id).first()
             if existing_application:
                 flash('You have already applied for this job.', 'warning')
                 return redirect(url_for('auth.option_page'))
 
-            # Create a new application
             new_application = Application(
                 job_id=job_id,
                 worker_id=current_user.id,
@@ -161,14 +157,12 @@ def apply_job(job_id):
 @job_bp.route('/user-category-jobs', methods=['GET'])
 def user_category_jobs():
     try:
-        # Fetch user's categories
+
         user_categories = UserCategory.query.filter_by(user_id=current_user.id).all()
         categories = [uc.category for uc in user_categories]
 
-        # Fetch jobs that match user's categories
+        
         jobs = Job.query.filter(Job.job_categories.in_(categories)).all()
-
-        # Serialize job data
         job_list = [job.serialize() for job in jobs]
 
         return jsonify({'success': True, 'jobs': job_list})

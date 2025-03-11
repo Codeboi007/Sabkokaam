@@ -15,7 +15,7 @@ class Users(db.Model, UserMixin):
     email = db.Column(db.String(120), unique=True, nullable=False)
     aadhar_number = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    is_verified = db.Column(db.Boolean, default=False)  # Identity verification status
+    is_verified = db.Column(db.Boolean, default=False) 
     country = db.Column(db.String(50), nullable=False)
     state = db.Column(db.String(50), nullable=False)
     city = db.Column(db.String(50), nullable=False)
@@ -42,7 +42,7 @@ class Job(db.Model):
     employer_name = db.Column(db.String(100), nullable=False)
     employer_email = db.Column(db.String(100), nullable=False)
     employer_contact = db.Column(db.String(20), nullable=False)
-    job_categories = db.Column(db.Text, nullable=False)  # Store categories as JSON string
+    job_categories = db.Column(db.Text, nullable=False) 
     address = db.Column(db.String(255), nullable=True)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
@@ -58,7 +58,7 @@ class Job(db.Model):
         self.employer_name = employer_name
         self.employer_email = employer_email
         self.employer_contact = employer_contact
-        self.job_categories = json.dumps(job_categories)  # Store as JSON string
+        self.job_categories = json.dumps(job_categories) 
         self.address = address
         self.latitude = latitude
         self.longitude = longitude
@@ -76,7 +76,7 @@ class Job(db.Model):
             'employer_name': self.employer_name,
             'employer_email': self.employer_email,
             'employer_contact': self.employer_contact,
-            'job_categories': json.loads(self.job_categories),  # Parse JSON string
+            'job_categories': json.loads(self.job_categories),  
             'address': self.address,
             'latitude': self.latitude,
             'longitude': self.longitude,

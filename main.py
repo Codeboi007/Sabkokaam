@@ -1,5 +1,5 @@
-from flask import Flask, redirect, url_for, render_template
-from flask_login import LoginManager, current_user
+from flask import Flask, render_template
+from flask_login import LoginManager
 from config import SQLALCHEMY_DATABASE_URI, SECRET_KEY, UPLOAD_FOLDER, ALLOWED_EXTENSIONS
 from database import db
 from routes.auth_routes import auth_bp
@@ -27,12 +27,7 @@ db.init_app(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'auth.user_login'
 
-es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST')])  # Initialize Elasticsearch here
-
-# Load face recognition models (paths should be correctly set)
-face_recognition_model_path = "api_models/dlib_face_recognition_resnet_model_v1.dat"
-face_landmarks_model_path = "api_models/shape_predictor_68_face_landmarks.dat"
-face_encoding_model_path = "api_models/mmod_human_face_detector.dat"
+es = Elasticsearch(hosts=[os.getenv('ELASTICSEARCH_HOST')])  
 
 
 
@@ -44,12 +39,12 @@ def load_user(user_id):
     from database import Users
     return Users.query.get(int(user_id))
 
-# Home route
+
 @app.route('/')
 def home():
     return render_template('landing.html')
 
-# Register Blueprints
+
 app.register_blueprint(auth_bp, url_prefix='/auth')
 app.register_blueprint(job_bp, url_prefix='/job')
 app.register_blueprint(user_bp, url_prefix='/user')

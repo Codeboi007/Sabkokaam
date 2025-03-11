@@ -1,5 +1,5 @@
-# routes/application_routes.py
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+
+from flask import Blueprint, render_template, request, jsonify
 from flask_login import current_user, login_required
 from database import Job, Application, db
 
