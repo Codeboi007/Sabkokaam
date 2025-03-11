@@ -88,7 +88,7 @@ class Application(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
     worker_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    status = db.Column(db.Enum('pending', 'accepted', 'rejected'), default='pending')
+    status = db.Column(db.Enum('pending', 'accepted', 'rejected',name="job_status"), default='pending')
     applied_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def serialize(self):
